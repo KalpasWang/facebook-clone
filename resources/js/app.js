@@ -27,10 +27,9 @@
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 import Vue from 'vue';
-import Veutify from 'vuetify';
+import Vuetify from 'vuetify';
 import App from './components/App.vue';
 import router from './router';
-import Vuetify from 'vuetify/lib';
 // import Vuetify from 'vuetify/lib';
 
 require('./bootstrap');
@@ -38,7 +37,11 @@ Vue.use(Vuetify);
 
 const app = new Vue({
     el: '#app',
-    vuetify: new Vuetify(),
+    vuetify: new Vuetify({
+      icons: {
+        iconfont: 'mdi'
+      }
+    }),
     components: {
       App
     },
