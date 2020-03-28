@@ -33,6 +33,7 @@ import router from './router';
 // import Vuetify from 'vuetify/lib';
 
 require('./bootstrap');
+window.Vue = require('vue');
 Vue.use(Vuetify);
 
 const app = new Vue({
