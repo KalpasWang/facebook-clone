@@ -23,7 +23,7 @@ class PostToTimelineTest extends TestCase
       'data' => [
         'type' => 'posts',
         'attributes' => [
-          'body' => 'Testing body'
+          'body' => 'Testing Body'
         ]
       ]
     ]);
@@ -39,7 +39,7 @@ class PostToTimelineTest extends TestCase
           'type' => 'posts',
           'post_id' => $post->id,
           'attributes' => [
-            'body' => 'Testing Body',
+            'body' => $post->body,
           ]
         ],
         'links' => [
