@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\User;
 
 class Post extends Model
 {
@@ -10,4 +11,9 @@ class Post extends Model
   public $primaryKey = 'id';
   public $timestamps = true;
   protected $guarded = [];
+
+  public function user()
+  {
+    return $this->belongsTo(User::class);
+  }
 }
