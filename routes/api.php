@@ -20,4 +20,5 @@ Route::middleware('auth:api')->group(function() {
   });
 
   Route::post('/posts', 'PostsController@store');
+  Route::get('/posts', 'PostsController@index');
 });
