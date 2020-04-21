@@ -27,22 +27,22 @@
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 import Vue from 'vue';
-import Vuetify from 'vuetify';
+// import Vuetify from 'vuetify';
 import App from './components/App.vue';
 import router from './router';
 // import Vuetify from 'vuetify/lib';
 
-require('./bootstrap');
+// require('./bootstrap');
 window.Vue = require('vue');
-Vue.use(Vuetify);
+// Vue.use(Vuetify);
 
 const app = new Vue({
     el: '#app',
-    vuetify: new Vuetify({
-      icons: {
-        iconfont: 'mdi'
-      }
-    }),
+    // vuetify: new Vuetify({
+    //   icons: {
+    //     iconfont: 'mdi'
+    //   }
+    // }),
     components: {
       App
     },

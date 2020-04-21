@@ -1,10 +1,8 @@
 <template>
-  <div>
-    <v-app>
-      <Navbar/>
-      start
-      <router-view></router-view>
-    </v-app>
+  <div class="flex flex-col flex-1 h-screen overflow-y-hidden">
+    <Navbar/>
+    start
+    <router-view></router-view>
   </div>
 </template>
 
