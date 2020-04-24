@@ -12,6 +12,7 @@ module.exports = {
   },
   variants: {
     outline: ['focus', 'responsive', 'hover'],
+    backgroundColor: ['responsive', 'hover', 'focus', 'active', 'group-hover'],
   },
   plugins: [],
 }
