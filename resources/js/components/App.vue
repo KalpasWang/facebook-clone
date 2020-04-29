@@ -1,8 +1,9 @@
 <template>
-  <div class="flex flex-col flex-1 h-screen overflow-y-hidden">
+  <div>
     <Navbar/>
-    start
-    <router-view></router-view>
+    <div class="w-full">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
