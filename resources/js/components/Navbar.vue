@@ -1,6 +1,6 @@
 <template>
   <div class="bg-white w-full h-12 px-3 flex items-center shadow">
-    <div class="w-3/10">
+    <div class="w-3/12">
       <div class="flex items-center">
         <router-link to="/">
           <svg class="fill-current w-9 h-9" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M23 12.1c0-6.1-4.9-11-11-11S1 6 1 12.1c0 5.5 4 10.1 9.3 10.9v-7.7H7.5v-3.2h2.8V9.7c0-2.8 1.6-4.3 4.2-4.3 1.2 0 2.5.2 2.5.2v2.7h-1.4c-1.4 0-1.8.8-1.8 1.7v2.1h3.1l-.5 3.2h-2.6V23c5.2-.9 9.2-5.4 9.2-10.9z" fill="#1877f2"/></svg>
@@ -12,11 +12,11 @@
               <path fill-rule="evenodd" d="M20.2 18.1l-1.4 1.3-5.5-5.2 1.4-1.3 5.5 5.2zM7.5 12c-2.7 0-4.9-2.1-4.9-4.6s2.2-4.6 4.9-4.6 4.9 2.1 4.9 4.6S10.2 12 7.5 12zM7.5.8C3.7.8.7 3.7.7 7.3s3.1 6.5 6.8 6.5c3.8 0 6.8-2.9 6.8-6.5S11.3.8 7.5.8z" clip-rule="evenodd"/>
             </svg>
           </div>
-          <input type="search" name="search" class="rounded-full pl-8 w-50 bg-gray-200 h-8 focus:outline-none text-sm" placeholder="搜尋 Facebook">
+          <input type="search" name="search" class="rounded-full pl-8 w-50 bg-gray-200 h-8 focus:outline-none text-sm" placeholder="搜尋 Fakebook">
         </div>
       </div>
     </div>
-    <div class="w-2/5 flex justify-between items-center h-full">
+    <div class="w-6/12 px-10 flex justify-between items-center h-full">
       <router-link to="/">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="fill-current w-5 h-5"><path d="M22.6 11l-9.9-9c-.4-.4-1.1-.4-1.5 0l-9.9 9c-.3.3-.5.8-.3 1.2.2.5.6.8 1.1.8h1.6v9c0 .4.3.6.6.6h5.4c.4 0 .6-.3.6-.6v-5.5h3.2V22c0 .4.3.6.6.6h5.4c.4 0 .6-.3.6-.6v-9h1.6c.5 0 .9-.3 1.1-.7.3-.5.2-1-.2-1.3zm-2.5-8h-4.3l5 4.5V3.6c0-.3-.3-.6-.7-.6z"/></svg>
       </router-link>
@@ -33,7 +33,7 @@
         <svg viewBox="0 0 28 28" class="block" fill="#65676b" height="28" width="28"><path d="M23.5 9.5H10.25a.75.75 0 00-.75.75v7c0 .414.336.75.75.75H17v5.5H4.5v-19h19v5zm0 14h-5v-6.25a.75.75 0 00-.75-.75H11V11h12.5v12.5zm1.5.25V4.25C25 3.561 24.439 3 23.75 3H4.25C3.561 3 3 3.561 3 4.25v19.5c0 .689.561 1.25 1.25 1.25h19.5c.689 0 1.25-.561 1.25-1.25z"></path></svg>
       </router-link>
     </div>
-    <div class="w-3/10 flex justify-end items-center">
+    <div class="w-3/12 flex justify-end items-center">
       <Avatar path="/" username="王偉航"></Avatar>
 
       <div id="alert" class="rounded-full bg-gray-300 hover:bg-gray-500 w-8 h-8 mx-1 flex justify-center items-center cursor-pointer">
