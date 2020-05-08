@@ -34,6 +34,7 @@ import router from './router';
 
 // require('./bootstrap');
 window.Vue = require('vue');
+window.axios = require('axios');
 // Vue.use(Vuetify);
 
 const app = new Vue({

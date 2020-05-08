@@ -1,7 +1,10 @@
 <template>
-  <div class="flex flex-col items-center pt-4 px-6 h-screen overflow-y-hidden">
-    <NewPost />
-    <Post />
+  <div>
+    <div v-if="error">{{ error }}</div>
+    <div v-else class="flex flex-col items-center pt-4 h-screen overflow-y-hidden">
+      <NewPost />
+      <Post />
+    </div>
   </div>
 </template>
 
@@ -11,8 +14,24 @@ import Post from "./Post";
 
 export default {
   name: 'NewsFeed',
+  data() {
+    return {
+      posts: null,
+      error: false
+    }
+  },
   components: {
     NewPost, Post
+  },
+  mounted() {
+    axios.get('/api/posts')
+      .then(res => {
+        this.posts = res.data;
+        this.error = false;
+      })
+      .catch(error => {
+        this.error = error;
+      })
   }
 }
 </script>
