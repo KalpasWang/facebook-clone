@@ -2186,7 +2186,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-/* harmony default export */ __webpack_exports__["default"] = ({});
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "Post",
+  props: ['post']
+});
 
 /***/ }),
 
@@ -3181,12 +3184,18 @@ var render = function() {
       ? _c("div", [_vm._v(_vm._s(_vm.error))])
       : _c(
           "div",
-          {
-            staticClass:
-              "flex flex-col items-center pt-4 h-screen overflow-y-hidden"
-          },
-          [_c("NewPost"), _vm._v(" "), _c("Post")],
-          1
+          { staticClass: "flex flex-col items-center pt-4 h-screen" },
+          [
+            _c("NewPost"),
+            _vm._v(" "),
+            _vm._l(_vm.posts.data, function(post) {
+              return _c("Post", {
+                key: post.data.post_id,
+                attrs: { post: post }
+              })
+            })
+          ],
+          2
         )
   ])
 }
@@ -3216,7 +3225,27 @@ var render = function() {
     "div",
     { staticClass: "bg-white rounded shadow w-full max-w-md mt-6" },
     [
-      _vm._m(0),
+      _c("div", { staticClass: "flex flex-col p-2" }, [
+        _c("div", { staticClass: "flex items-center" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("div", [
+            _c("div", { staticClass: "text-sm font-bold" }, [
+              _vm._v(
+                _vm._s(_vm.post.data.attributes.posted_by.data.attributes.name)
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "text-xs text-gray-600" }, [
+              _vm._v("12 分鐘前")
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "mt-4" }, [
+          _vm._v("\n      " + _vm._s(_vm.post.data.attributes.body) + "\n    ")
+        ])
+      ]),
       _vm._v(" "),
       _vm._m(1),
       _vm._v(" "),
@@ -3347,8 +3376,8 @@ var render = function() {
       _c(
         "div",
         {
-          staticClass: "flex justify-between border-1 border-gray-400 pt-1 m-2",
-          staticStyle: { "border-top": "1px solid #888" }
+          staticClass: "flex justify-between pt-1 m-2",
+          staticStyle: { "border-top": "1px solid #ccc" }
         },
         [
           _c(
@@ -3420,30 +3449,15 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "flex flex-col p-2" }, [
-      _c("div", { staticClass: "flex items-center" }, [
-        _c("div", [
-          _c("img", {
-            staticClass:
-              "w-10 h-10 object-cover rounded-full align-middle mr-2",
-            attrs: {
-              src:
-                "https://cdn.pixabay.com/photo/2014/07/09/10/04/man-388104_960_720.jpg",
-              alt: "user image"
-            }
-          })
-        ]),
-        _vm._v(" "),
-        _c("div", [
-          _c("div", { staticClass: "text-sm font-bold" }, [_vm._v("Username")]),
-          _vm._v(" "),
-          _c("div", { staticClass: "text-xs text-gray-600" }, [
-            _vm._v("12 分鐘前")
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "mt-4" }, [_vm._v("\n      我的第一PO\n    ")])
+    return _c("div", [
+      _c("img", {
+        staticClass: "w-10 h-10 object-cover rounded-full align-middle mr-2",
+        attrs: {
+          src:
+            "https://cdn.pixabay.com/photo/2014/07/09/10/04/man-388104_960_720.jpg",
+          alt: "user image"
+        }
+      })
     ])
   },
   function() {

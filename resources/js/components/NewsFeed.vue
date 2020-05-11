@@ -1,9 +1,9 @@
 <template>
   <div>
     <div v-if="error">{{ error }}</div>
-    <div v-else class="flex flex-col items-center pt-4 h-screen overflow-y-hidden">
+    <div v-else class="flex flex-col items-center pt-4 h-screen">
       <NewPost />
-      <Post />
+      <Post v-for="post in posts.data" :key="post.data.post_id" :post="post"/>
     </div>
   </div>
 </template>
