@@ -2110,7 +2110,9 @@ __webpack_require__.r(__webpack_exports__);
   name: 'NewsFeed',
   data: function data() {
     return {
-      posts: null,
+      posts: {
+        data: null
+      },
       error: false
     };
   },
@@ -2122,6 +2124,7 @@ __webpack_require__.r(__webpack_exports__);
     var _this = this;
 
     axios.get('/api/posts').then(function (res) {
+      console.log(res);
       _this.posts = res.data;
       _this.error = false;
     })["catch"](function (error) {
@@ -2808,12 +2811,21 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "flex flex-1" }, [
-    _c("div", { staticClass: "w-3/12" }, [_c("Sidebar")], 1),
+  return _c("div", { staticClass: "flex flex-1 mt-12" }, [
+    _c(
+      "div",
+      { staticClass: "w-3/12 h-screen overflow-y-hidden fixed left-0" },
+      [_c("Sidebar")],
+      1
+    ),
     _vm._v(" "),
-    _c("div", { staticClass: "w-6/12 overflow-y-hidden" }, [_c("NewsFeed")], 1),
+    _c("div", { staticClass: "w-6/12 mx-auto" }, [_c("NewsFeed")], 1),
     _vm._v(" "),
-    _c("div", { staticClass: "w-3/12" }, [_vm._v("\n    messenger\n  ")])
+    _c(
+      "div",
+      { staticClass: "w-3/12 h-screen overflow-y-hidden fixed right-0" },
+      [_vm._v("\n    messenger\n  ")]
+    )
   ])
 }
 var staticRenderFns = []
@@ -2840,7 +2852,10 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "bg-white w-full h-12 px-3 flex items-center shadow" },
+    {
+      staticClass:
+        "bg-white w-full fixed z-10 top-0 h-12 px-3 flex items-center shadow"
+    },
     [
       _c("div", { staticClass: "w-3/12" }, [
         _c(
@@ -3237,7 +3252,7 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "text-xs text-gray-600" }, [
-              _vm._v("12 分鐘前")
+              _vm._v(_vm._s(_vm.post.data.attributes.posted_at))
             ])
           ])
         ]),

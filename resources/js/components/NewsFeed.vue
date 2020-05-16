@@ -16,7 +16,7 @@ export default {
   name: 'NewsFeed',
   data() {
     return {
-      posts: null,
+      posts: { data: null },
       error: false
     }
   },
@@ -26,6 +26,7 @@ export default {
   mounted() {
     axios.get('/api/posts')
       .then(res => {
+        console.log(res);
         this.posts = res.data;
         this.error = false;
       })

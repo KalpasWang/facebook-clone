@@ -1,12 +1,12 @@
 <template>
-  <div class="flex flex-1">
-    <div class="w-3/12">
+  <div class="flex flex-1 mt-12">
+    <div class="w-3/12 h-screen overflow-y-hidden fixed left-0">
       <Sidebar />
     </div>
-    <div class="w-6/12 overflow-y-hidden">
+    <div class="w-6/12 mx-auto">
       <NewsFeed />
     </div>
-    <div class="w-3/12">
+    <div class="w-3/12 h-screen overflow-y-hidden fixed right-0">
       messenger
     </div>
   </div>
