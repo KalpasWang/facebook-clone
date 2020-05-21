@@ -2104,6 +2104,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2113,7 +2116,8 @@ __webpack_require__.r(__webpack_exports__);
       posts: {
         data: null
       },
-      error: false
+      loading: true,
+      errorMsg: ''
     };
   },
   components: {
@@ -2124,11 +2128,12 @@ __webpack_require__.r(__webpack_exports__);
     var _this = this;
 
     axios.get('/api/posts').then(function (res) {
-      console.log(res);
       _this.posts = res.data;
-      _this.error = false;
     })["catch"](function (error) {
-      _this.error = error;
+      console.log(error);
+      _this.errorMsg = error;
+    })["finally"](function () {
+      _this.loading = false;
     });
   }
 });
@@ -3195,23 +3200,27 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _vm.error
-      ? _c("div", [_vm._v(_vm._s(_vm.error))])
-      : _c(
-          "div",
-          { staticClass: "flex flex-col items-center pt-4 h-screen" },
-          [
-            _c("NewPost"),
-            _vm._v(" "),
-            _vm._l(_vm.posts.data, function(post) {
+    _c(
+      "div",
+      { staticClass: "flex flex-col items-center pt-4 h-screen" },
+      [
+        _c("NewPost"),
+        _vm._v(" "),
+        _vm.loading
+          ? _c("div", [_vm._v("\n      Loading...\n    ")])
+          : _vm.errorMsg
+          ? _c("div", { staticClass: "text-lg mt-10 text-center" }, [
+              _vm._v(_vm._s(_vm.errorMsg))
+            ])
+          : _vm._l(_vm.posts.data, function(post) {
               return _c("Post", {
                 key: post.data.post_id,
                 attrs: { post: post }
               })
             })
-          ],
-          2
-        )
+      ],
+      2
+    )
   ])
 }
 var staticRenderFns = []

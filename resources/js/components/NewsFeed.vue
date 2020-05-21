@@ -1,9 +1,12 @@
 <template>
   <div>
-    <div v-if="error">{{ error }}</div>
-    <div v-else class="flex flex-col items-center pt-4 h-screen">
+    <div class="flex flex-col items-center pt-4 h-screen">
       <NewPost />
-      <Post v-for="post in posts.data" :key="post.data.post_id" :post="post"/>
+      <div v-if="loading">
+        Loading...
+      </div>
+      <div v-else-if="errorMsg" class="text-lg mt-10 text-center">{{ errorMsg }}</div>
+      <Post v-else v-for="post in posts.data" :key="post.data.post_id" :post="post"/>
     </div>
   </div>
 </template>
@@ -17,7 +20,8 @@ export default {
   data() {
     return {
       posts: { data: null },
-      error: false
+      loading: true,
+      errorMsg: ''
     }
   },
   components: {
@@ -26,12 +30,14 @@ export default {
   mounted() {
     axios.get('/api/posts')
       .then(res => {
-        console.log(res);
         this.posts = res.data;
-        this.error = false;
       })
       .catch(error => {
-        this.error = error;
+        console.log(error);
+        this.errorMsg = error;
+      })
+      .finally(() => {
+        this.loading = false;
       })
   }
 }
