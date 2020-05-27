@@ -15,10 +15,16 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth:api')->group(function() {
-  Route::get('/user', function (Request $request) {
-    return $request->user();
-  });
+  // Route::get('/user', function (Request $request) {
+  //   return $request->user();
+  // });
 
-  Route::post('/posts', 'PostsController@store');
-  Route::get('/posts', 'PostsController@index');
+  // Route::post('/posts', 'PostsController@store');
+  // Route::get('/posts', 'PostsController@index');
+  Route::apiResources([
+    'posts' => 'PostsController',
+    'users' => 'UsersController',
+  ]);
+
+  // Route::get('/users/:userId', 'UsersController@show');
 });
