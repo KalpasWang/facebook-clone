@@ -24,6 +24,7 @@ Route::middleware('auth:api')->group(function() {
   Route::apiResources([
     'posts' => 'PostsController',
     'users' => 'UsersController',
+    '/users/{user}/posts' => 'UserPostsController',
   ]);
 
   // Route::get('/users/:userId', 'UsersController@show');
