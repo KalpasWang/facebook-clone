@@ -2260,6 +2260,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _components_Post__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../components/Post */ "./resources/js/components/Post.vue");
 //
 //
 //
@@ -2268,13 +2269,39 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'Show',
   data: function data() {
     return {
       user: null,
-      loading: null
+      posts: null,
+      userLoading: true,
+      postsLoading: true,
+      userErrorMsg: null,
+      postsErrorMsg: null
     };
+  },
+  components: {
+    Post: _components_Post__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
   mounted: function mounted() {
     var _this = this;
@@ -2282,16 +2309,16 @@ __webpack_require__.r(__webpack_exports__);
     axios.get('/api/users/' + this.$route.params.userId).then(function (res) {
       _this.user = res.data;
     })["catch"](function (error) {
-      console.log('Unable to fetch the user from the server.');
+      userErrorMsg = 'Unable to fetch the user from the server.';
     })["finally"](function () {
-      _this.loading = false;
+      _this.userLoading = false;
     });
-    axios.get('/api/posts/' + this.$route.params.userId).then(function (res) {
+    axios.get('/api/users/' + this.$route.params.userId + '/posts').then(function (res) {
       _this.posts = res.data;
-      _this.loading = false;
+      _this.postsLoading = false;
     })["catch"](function (error) {
-      console.log('Unable to fetch posts');
-      _this.loading = false;
+      postsErrorMsg = 'Unable to fetch posts';
+      _this.postsLoading = false;
     });
   }
 });
@@ -2906,7 +2933,7 @@ var render = function() {
     "div",
     {
       staticClass:
-        "bg-white w-full fixed z-10 top-0 h-12 px-3 flex items-center shadow"
+        "bg-white w-full fixed z-50 top-0 h-12 px-3 flex items-center shadow"
     },
     [
       _c("div", { staticClass: "w-3/12" }, [
@@ -3643,24 +3670,79 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", { staticClass: "flex flex-col items-center" }, [
+    _vm.userLoading
+      ? _c("div", [_vm._v("Loading User Profile...")])
+      : _vm.userErrorMsg
+      ? _c("div", [_vm._v(_vm._s(_vm.userErrorMsg))])
+      : _c("div", { staticClass: "relative" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "absolute left-0 right-0 top-7/10 z-10",
+              staticStyle: { top: "70%" }
+            },
+            [
+              _vm._m(1),
+              _vm._v(" "),
+              _c("p", { staticClass: "text-2xl text-center" }, [
+                _vm._v(_vm._s(_vm.user.data.attributes.name))
+              ])
+            ]
+          )
+        ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "mt-20" },
+      [
+        _vm.postsLoading
+          ? _c("div", [_vm._v("Loading Your Posts")])
+          : _vm.postsErrorMsg
+          ? _c("div", [_vm._v(_vm._s(_vm.postsErrorMsg))])
+          : _vm._l(_vm.posts.data, function(post) {
+              return _c("Post", {
+                key: post.data.post_id,
+                attrs: { post: post }
+              })
+            })
+      ],
+      2
+    )
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", [
-      _c("div", { staticClass: "w-100 h-64 overflow-hidden" }, [
-        _c("img", {
-          staticClass: "object-cover w-full",
-          attrs: {
-            src:
-              "https://cdn.pixabay.com/photo/2017/03/26/12/13/countryside-2175353_960_720.jpg",
-            alt: "user background image"
-          }
-        })
-      ])
+    return _c("div", { staticClass: "w-100 h-64 overflow-hidden z-0" }, [
+      _c("img", {
+        staticClass: "object-cover w-full",
+        attrs: {
+          src:
+            "https://cdn.pixabay.com/photo/2017/03/26/12/13/countryside-2175353_960_720.jpg",
+          alt: "user background image"
+        }
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "mx-auto w-32" }, [
+      _c("img", {
+        staticClass:
+          "object-cover w-32 h-32 border-4 border-white rounded-full",
+        attrs: {
+          src:
+            "https://cdn.pixabay.com/photo/2014/07/09/10/04/man-388104_960_720.jpg",
+          alt: "user profile image"
+        }
+      })
     ])
   }
 ]

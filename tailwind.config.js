@@ -9,7 +9,10 @@ module.exports = {
       height: {
         "28px": "28px",
         "9": "2.25rem"
-      }
+      },
+      top: {
+        "7/10": "70%" 
+      },
     },
   },
   variants: {

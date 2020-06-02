@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white w-full fixed z-10 top-0 h-12 px-3 flex items-center shadow">
+  <div class="bg-white w-full fixed z-50 top-0 h-12 px-3 flex items-center shadow">
     <div class="w-3/12">
       <div class="flex items-center">
         <router-link to="/">
