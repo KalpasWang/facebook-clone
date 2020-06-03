@@ -16,7 +16,7 @@
       </div>
     </div>
 
-    <div class="mt-20">
+    <div class="mt-32">
       <div v-if="postsLoading">Loading Your Posts</div>
       <div v-else-if="postsErrorMsg">{{ postsErrorMsg }}</div>
       <Post v-else v-for="post in posts.data" :key="post.data.post_id" :post="post"/>
@@ -60,7 +60,7 @@ export default {
         this.postsLoading = false;
       })
       .catch(error => {
-        postsErrorMsg = 'Unable to fetch posts';
+        this.postsErrorMsg = 'Unable to fetch posts';
         this.postsLoading = false;
       });
 }

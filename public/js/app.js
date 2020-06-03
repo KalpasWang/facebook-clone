@@ -2317,7 +2317,7 @@ __webpack_require__.r(__webpack_exports__);
       _this.posts = res.data;
       _this.postsLoading = false;
     })["catch"](function (error) {
-      postsErrorMsg = 'Unable to fetch posts';
+      _this.postsErrorMsg = 'Unable to fetch posts';
       _this.postsLoading = false;
     });
   }
@@ -3696,7 +3696,7 @@ var render = function() {
     _vm._v(" "),
     _c(
       "div",
-      { staticClass: "mt-20" },
+      { staticClass: "mt-32" },
       [
         _vm.postsLoading
           ? _c("div", [_vm._v("Loading Your Posts")])
