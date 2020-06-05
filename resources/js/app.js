@@ -30,6 +30,7 @@ import Vue from 'vue';
 // import Vuetify from 'vuetify';
 import App from './components/App.vue';
 import router from './router';
+import store from './store';
 // import Vuetify from 'vuetify/lib';
 
 // require('./bootstrap');
@@ -47,5 +48,6 @@ const app = new Vue({
     components: {
       App
     },
-    router
+    router,
+    store
 });
