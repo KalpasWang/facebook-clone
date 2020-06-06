@@ -15,6 +15,14 @@
       components: {
         Navbar
       },
+      watch: {
+        $route(to, from) {
+          this.$store.dispatch('fetchPageTitle', to.meta.title);
+        }
+      },
+      created() {
+        this.$store.dispatch('fetchPageTitle', this.$route.meta.title);
+      },
       mounted() {
         this.$store.dispatch('fetchAuthUser');
       }
