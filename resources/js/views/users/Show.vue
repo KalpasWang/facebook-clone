@@ -46,6 +46,7 @@ export default {
     axios.get('/api/users/' + this.$route.params.userId)
       .then(res => {
         this.user = res.data;
+        document.title = this.user.data.attributes.name + ' | Fakebook';
       })
       .catch(error => {
         userErrorMsg = 'Unable to fetch the user from the server.';

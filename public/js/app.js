@@ -2337,6 +2337,7 @@ __webpack_require__.r(__webpack_exports__);
 
     axios.get('/api/users/' + this.$route.params.userId).then(function (res) {
       _this.user = res.data;
+      document.title = _this.user.data.attributes.name + ' | Fakebook';
     })["catch"](function (error) {
       userErrorMsg = 'Unable to fetch the user from the server.';
     })["finally"](function () {
@@ -20683,7 +20684,7 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODU
     name: 'Show',
     component: _views_users_Show_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
     meta: {
-      title: 'profile'
+      title: null
     }
   }]
 }));

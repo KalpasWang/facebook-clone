@@ -18,7 +18,7 @@ export default new Router({
       path: '/users/:userId',
       name: 'Show',
       component: UserShow,
-      meta: { title: 'profile' }
+      meta: { title: null }
     }
   ]
 })
