@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use Carbon\Carbon;
 
 class FriendsTest extends TestCase
 {
@@ -79,20 +80,21 @@ class FriendsTest extends TestCase
     ])->assertStatus(200);
 
     $friendRequest = \App\Friend::first();
-    $this->assertNotNull($friendRequest->comfirmed_at);
-  //   $this->assertEquals($anotherUser->id, $friendRequest->friend_id);
-  //   $this->assertEquals($user->id, $friendRequest->user_id);
-  //   $response->assertJson([
-  //     'data' => [
-  //       'type' => 'friend-request',
-  //       'friend_request_id' => $friendRequest->id,
-  //       'attributes' => [
-  //         'confirmed_at' => null,
-  //       ]
-  //     ],
-  //     'links' => [
-  //       'self' => url('/users/'.$anotherUser->id),
-  //     ]
-  //   ]);
+    $this->assertNotNull($friendRequest->confirmed_at);
+    $this->assertInstanceOf(Carbon::class, $friendRequest->confirmed_at);
+    $this->assertEquals(now()->startOfSecond(), $friendRequest->confirmed_at);
+    $this->assertEquals($friendRequest->status, 1);
+    $response->assertJson([
+      'data' => [
+        'type' => 'friend-request',
+        'friend_request_id' => $friendRequest->id,
+        'attributes' => [
+          'confirmed_at' => $friendRequest->confirmed_at->diffForHumans(),
+        ]
+      ],
+      'links' => [
+        'self' => url('/users/'.$anotherUser->id),
+      ]
+    ]);
   }
 } 
