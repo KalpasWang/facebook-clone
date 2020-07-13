@@ -166,4 +166,62 @@ class FriendsTest extends TestCase
     $this->assertArrayHasKey('user_id', $responseString['errors']['meta']);
     $this->assertArrayHasKey('status', $responseString['errors']['meta']);
   }
+
+  public function testAFriendshipIsRetrievedWhenFetchingUserProfile()
+  {
+    $this->actingAs($user = factory(\App\User::class)->create(), 'api');
+    $anotherUser = factory(\App\User::class)->create();
+    $friendRequest = \App\Friend::create([
+      'user_id' => $user->id,
+      'friend_id' => $anotherUser->id,
+      'confirmed_at' => now()->subDay(),
+      'status' => 1,
+    ]);
+
+    $this->get('/api/users/'.$anotherUser->id)
+      ->assertStatus(200)
+      ->assertJson([
+        'data' => [
+          'attributes' => [
+            'friendship' => [
+              'data' => [
+                'friend_request_id' => $friendRequest->id,
+                'attributes' => [
+                  'confirmed_at' => '1 day ago',
+                ]
+              ]
+            ]
+          ]
+        ],
+      ]);
+  }
+
+  public function testAnInverseFriendshipIsRetrievedWhenFetchingUserProfile()
+  {
+    $this->actingAs($user = factory(\App\User::class)->create(), 'api');
+    $anotherUser = factory(\App\User::class)->create();
+    $friendRequest = \App\Friend::create([
+      'user_id' => $anotherUser->id,
+      'friend_id' => $user->id,
+      'confirmed_at' => now()->subDay(),
+      'status' => 1,
+    ]);
+
+    $this->get('/api/users/'.$anotherUser->id)
+      ->assertStatus(200)
+      ->assertJson([
+        'data' => [
+          'attributes' => [
+            'friendship' => [
+              'data' => [
+                'friend_request_id' => $friendRequest->id,
+                'attributes' => [
+                  'confirmed_at' => '1 day ago',
+                ]
+              ]
+            ]
+          ]
+        ],
+      ]);
+  }
 } 
