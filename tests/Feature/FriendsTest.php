@@ -42,8 +42,6 @@ class FriendsTest extends TestCase
   
   public function testOnlyValidUsersCanBeFriendRequested()
   {
-    // $this->withoutExceptionHandling();
-
     $this->actingAs($user = factory(\App\User::class)->create(), 'api');
 
     $response = $this->post('/api/friend-request', [
@@ -143,5 +141,16 @@ class FriendsTest extends TestCase
         'detail' => 'Unable to locate the friend request with the given information.',
       ]
     ]);
+  }
+
+  public function testAfriendIdIsRequiredForFriendRequest()
+  {
+    $response = $this->actingAs($user = factory(\App\User::class)->create(), 'api')
+      ->post('/api/friend-request', [
+          'friend_id' => '',
+      ])->assertStatus(422);
+
+    $responseString = json_decode($response->getContent(), true);
+    $this->assertArrayHasKey('friend_id', $responseString['errors']['meta']);
   }
 } 
