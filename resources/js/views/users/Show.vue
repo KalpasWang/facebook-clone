@@ -14,6 +14,10 @@
 
         <p class="text-2xl text-center">{{ user.data.attributes.name }}</p>
       </div>
+
+      <div class="absolute flex items-center bottom-0 right-0 mb-4 mr-12 z-10">
+        <button class="py-1 px-3 bg-gray-400 hover:bg-gray-500 rounded focus:outline-none">Add Friend</button>
+      </div>
     </div>
 
     <div class="mt-32">
@@ -26,12 +30,13 @@
 
 <script>
 import Post from "../../components/Post";
+import { mapGetters } from "vuex";
 
 export default {
   name: 'Show',
   data() {
     return {
-      user: null,
+      // user: null,
       posts: null,
       userLoading: true,
       postsLoading: true,
@@ -42,16 +47,10 @@ export default {
   components: {
     Post
   },
+  computed: mapGetters(['user']),
   mounted() {
-    axios.get('/api/users/' + this.$route.params.userId)
-      .then(res => {
-        this.user = res.data;
-        document.title = this.user.data.attributes.name + ' | Fakebook';
-      })
-      .catch(error => {
-        userErrorMsg = 'Unable to fetch the user from the server.';
-      })
-      .finally(() => {
+     this.$store.dispatch('fetchUser', this.$route.params.userId)
+      .then(() => {
         this.userLoading = false;
       });
 
@@ -64,7 +63,7 @@ export default {
         this.postsErrorMsg = 'Unable to fetch posts';
         this.postsLoading = false;
       });
-}
+  },
 }
 </script>
 

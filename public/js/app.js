@@ -2290,6 +2290,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Post__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../components/Post */ "./resources/js/components/Post.vue");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+//
+//
+//
+//
 //
 //
 //
@@ -2317,11 +2322,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'Show',
   data: function data() {
     return {
-      user: null,
+      // user: null,
       posts: null,
       userLoading: true,
       postsLoading: true,
@@ -2332,15 +2338,11 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     Post: _components_Post__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
+  computed: Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapGetters"])(['user']),
   mounted: function mounted() {
     var _this = this;
 
-    axios.get('/api/users/' + this.$route.params.userId).then(function (res) {
-      _this.user = res.data;
-      document.title = _this.user.data.attributes.name + ' | Fakebook';
-    })["catch"](function (error) {
-      userErrorMsg = 'Unable to fetch the user from the server.';
-    })["finally"](function () {
+    this.$store.dispatch('fetchUser', this.$route.params.userId).then(function () {
       _this.userLoading = false;
     });
     axios.get('/api/users/' + this.$route.params.userId + '/posts').then(function (res) {
@@ -3737,7 +3739,9 @@ var render = function() {
                 _vm._v(_vm._s(_vm.user.data.attributes.name))
               ])
             ]
-          )
+          ),
+          _vm._v(" "),
+          _vm._m(2)
         ]),
     _vm._v(" "),
     _c(
@@ -3790,6 +3794,28 @@ var staticRenderFns = [
         }
       })
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass:
+          "absolute flex items-center bottom-0 right-0 mb-4 mr-12 z-10"
+      },
+      [
+        _c(
+          "button",
+          {
+            staticClass:
+              "py-1 px-3 bg-gray-400 hover:bg-gray-500 rounded focus:outline-none"
+          },
+          [_vm._v("Add Friend")]
+        )
+      ]
+    )
   }
 ]
 render._withStripped = true
@@ -20705,6 +20731,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var _modules_user__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/user */ "./resources/js/store/modules/user.js");
 /* harmony import */ var _modules_title__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/title */ "./resources/js/store/modules/title.js");
+/* harmony import */ var _modules_profile__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/profile */ "./resources/js/store/modules/profile.js");
+
 
 
 
@@ -20713,9 +20741,58 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 /* harmony default export */ __webpack_exports__["default"] = (new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
   modules: {
     User: _modules_user__WEBPACK_IMPORTED_MODULE_2__["default"],
-    Title: _modules_title__WEBPACK_IMPORTED_MODULE_3__["default"]
+    Title: _modules_title__WEBPACK_IMPORTED_MODULE_3__["default"],
+    Profile: _modules_profile__WEBPACK_IMPORTED_MODULE_4__["default"]
   }
 }));
+
+/***/ }),
+
+/***/ "./resources/js/store/modules/profile.js":
+/*!***********************************************!*\
+  !*** ./resources/js/store/modules/profile.js ***!
+  \***********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+var state = {
+  user: null,
+  userStatus: null
+};
+var getters = {
+  user: function user(state) {
+    return state.user;
+  }
+};
+var actions = {
+  fetchUser: function fetchUser(_ref, userId) {
+    var commit = _ref.commit,
+        state = _ref.state;
+    commit('setUserStatus', 'Loading');
+    return axios.get('/api/users/' + userId).then(function (res) {
+      commit('setUser', res.data);
+      commit('setUserStatus', 'Success');
+    })["catch"](function (error) {
+      commit('setUserStatus', 'Error');
+    });
+  }
+};
+var mutations = {
+  setUser: function setUser(state, user) {
+    state.user = user;
+  },
+  setUserStatus: function setUserStatus(state, status) {
+    state.userStatus = status;
+  }
+};
+/* harmony default export */ __webpack_exports__["default"] = ({
+  state: state,
+  getters: getters,
+  actions: actions,
+  mutations: mutations
+});
 
 /***/ }),
 
