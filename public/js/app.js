@@ -2321,6 +2321,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2338,7 +2342,7 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     Post: _components_Post__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  computed: Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapGetters"])(['user']),
+  computed: Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapGetters"])(['user', 'friendBtnText']),
   mounted: function mounted() {
     var _this = this;
 
@@ -2845,7 +2849,12 @@ var render = function() {
     [
       _c("Navbar"),
       _vm._v(" "),
-      _c("div", { staticClass: "w-full" }, [_c("router-view")], 1)
+      _c(
+        "div",
+        { staticClass: "w-full" },
+        [_c("router-view", { key: _vm.$route.fullPath })],
+        1
+      )
     ],
     1
   )
@@ -3741,7 +3750,37 @@ var render = function() {
             ]
           ),
           _vm._v(" "),
-          _vm._m(2)
+          _c(
+            "div",
+            {
+              staticClass:
+                "absolute flex items-center bottom-0 right-0 mb-4 mr-12 z-10"
+            },
+            [
+              _vm.friendBtnText
+                ? _c(
+                    "button",
+                    {
+                      staticClass:
+                        "py-1 px-3 bg-gray-400 hover:bg-gray-500 rounded focus:outline-none",
+                      on: {
+                        click: function($event) {
+                          return _vm.$store.dispatch(
+                            "sendFriendRequest",
+                            _vm.$route.params.userId
+                          )
+                        }
+                      }
+                    },
+                    [
+                      _vm._v(
+                        "\n        " + _vm._s(_vm.friendBtnText) + "\n      "
+                      )
+                    ]
+                  )
+                : _vm._e()
+            ]
+          )
         ]),
     _vm._v(" "),
     _c(
@@ -3794,28 +3833,6 @@ var staticRenderFns = [
         }
       })
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      {
-        staticClass:
-          "absolute flex items-center bottom-0 right-0 mb-4 mr-12 z-10"
-      },
-      [
-        _c(
-          "button",
-          {
-            staticClass:
-              "py-1 px-3 bg-gray-400 hover:bg-gray-500 rounded focus:outline-none"
-          },
-          [_vm._v("Add Friend")]
-        )
-      ]
-    )
   }
 ]
 render._withStripped = true
@@ -20759,23 +20776,58 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 __webpack_require__.r(__webpack_exports__);
 var state = {
   user: null,
-  userStatus: null
+  userStatus: null,
+  friendBtnText: null
 };
 var getters = {
   user: function user(state) {
     return state.user;
+  },
+  friendBtnText: function friendBtnText(state) {
+    return state.friendBtnText;
+  },
+  friendship: function friendship(state) {
+    return state.user.data.attributes.friendship;
   }
 };
 var actions = {
   fetchUser: function fetchUser(_ref, userId) {
     var commit = _ref.commit,
-        state = _ref.state;
+        dispatch = _ref.dispatch;
     commit('setUserStatus', 'Loading');
     return axios.get('/api/users/' + userId).then(function (res) {
       commit('setUser', res.data);
       commit('setUserStatus', 'Success');
+      dispatch('fetchFriendBtn');
     })["catch"](function (error) {
       commit('setUserStatus', 'Error');
+    });
+  },
+  fetchFriendBtn: function fetchFriendBtn(_ref2) {
+    var commit = _ref2.commit,
+        getters = _ref2.getters;
+
+    if (getters.user.data.user_id === this.$route.params.userId) {
+      commit('setFriendBtnText', '');
+      return;
+    }
+
+    if (getters.friendship === null) {
+      commit('setFriendBtnText', 'Add Friend');
+    } else if (getters.friendship.data.attributes.confirmed_at === null) {
+      commit('setFriendBtnText', 'Pending');
+    }
+  },
+  sendFriendRequest: function sendFriendRequest(_ref3, friendId) {
+    var commit = _ref3.commit,
+        state = _ref3.state;
+    commit('setFriendBtnText', 'Loading');
+    axios.post('/api/friend-request', {
+      'friend_id': friendId
+    }).then(function () {
+      commit('setFriendBtnText', 'Pending');
+    })["catch"](function () {
+      commit('setFriendBtnText', 'Add Friend');
     });
   }
 };
@@ -20785,6 +20837,9 @@ var mutations = {
   },
   setUserStatus: function setUserStatus(state, status) {
     state.userStatus = status;
+  },
+  setFriendBtnText: function setFriendBtnText(state, text) {
+    state.friendBtnText = text;
   }
 };
 /* harmony default export */ __webpack_exports__["default"] = ({

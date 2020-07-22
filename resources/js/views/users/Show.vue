@@ -16,7 +16,11 @@
       </div>
 
       <div class="absolute flex items-center bottom-0 right-0 mb-4 mr-12 z-10">
-        <button class="py-1 px-3 bg-gray-400 hover:bg-gray-500 rounded focus:outline-none">Add Friend</button>
+        <button v-if="friendBtnText" 
+                class="py-1 px-3 bg-gray-400 hover:bg-gray-500 rounded focus:outline-none"
+                @click="$store.dispatch('sendFriendRequest', $route.params.userId)">
+          {{ friendBtnText }}
+        </button>
       </div>
     </div>
 
@@ -47,7 +51,7 @@ export default {
   components: {
     Post
   },
-  computed: mapGetters(['user']),
+  computed: mapGetters(['user', 'friendBtnText']),
   mounted() {
      this.$store.dispatch('fetchUser', this.$route.params.userId)
       .then(() => {
