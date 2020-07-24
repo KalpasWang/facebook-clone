@@ -1,15 +1,18 @@
 const state = {
   user: null,
   userStatus: null,
-  friendBtnText: null
 };
 
 const getters = {
   user(state) {
     return state.user;
   },
-  friendBtnText(state) {
-    return state.friendBtnText;
+  friendBtnText(state, getters) {
+    if(getters.friendship === null) {
+      return 'Add Friend';
+    } else if(getters.friendship.data.attributes.confirmed_at === null) {
+      return 'Pending';
+    }
   },
   friendship(state) {
     return state.user.data.attributes.friendship;
@@ -23,32 +26,32 @@ const actions = {
       .then(res => {
         commit('setUser', res.data);
         commit('setUserStatus', 'Success');
-        dispatch('fetchFriendBtn');
+        // dispatch('fetchFriendBtn');
       })
       .catch(error => {
         commit('setUserStatus', 'Error');
       })
   },
-  fetchFriendBtn({commit, getters}) {
-    if(getters.user.data.user_id === this.$route.params.userId){
-      commit('setFriendBtnText', '');
-      return;
-    }
+  // fetchFriendBtn({commit, getters, rootGetters}) {
+  //   // if(getters.user.data.user_id === rootGetters['user/authUser'].data.user_id){
+  //   //   commit('setFriendBtnText', '');
+  //   //   return;
+  //   // }
 
-    if(getters.friendship === null) {
-      commit('setFriendBtnText', 'Add Friend');
-    } else if(getters.friendship.data.attributes.confirmed_at === null) {
-      commit('setFriendBtnText', 'Pending');
-    }
-  },
+  //   if(getters.friendship === null) {
+  //     commit('setFriendBtnText', 'Add Friend');
+  //   } else if(getters.friendship.data.attributes.confirmed_at === null) {
+  //     commit('setFriendBtnText', 'Pending');
+  //   }
+  // },
   sendFriendRequest({commit, state}, friendId) {
-    commit('setFriendBtnText', 'Loading');
+    // commit('setFriendBtnText', 'Loading');
     axios.post('/api/friend-request', { 'friend_id': friendId })
       .then(() => {
-        commit('setFriendBtnText', 'Pending');
+        commit('setUserFriendship', res.data);
       })
       .catch(() => {
-        commit('setFriendBtnText', 'Add Friend');
+
       });
   }
 };
@@ -60,9 +63,12 @@ const mutations = {
   setUserStatus(state, status) {
     state.userStatus = status;
   },
-  setFriendBtnText(state, text) {
-    state.friendBtnText = text;
-  }
+  // setFriendBtnText(state, text) {
+  //   state.friendBtnText = text;
+  // }
+  setUserFriendship(state, friendship) {
+    state.user.data.attributes.friendship = friendship;
+  },
 };
 
 export default {

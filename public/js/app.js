@@ -20776,15 +20776,18 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 __webpack_require__.r(__webpack_exports__);
 var state = {
   user: null,
-  userStatus: null,
-  friendBtnText: null
+  userStatus: null
 };
 var getters = {
   user: function user(state) {
     return state.user;
   },
-  friendBtnText: function friendBtnText(state) {
-    return state.friendBtnText;
+  friendBtnText: function friendBtnText(state, getters) {
+    if (getters.friendship === null) {
+      return 'Add Friend';
+    } else if (getters.friendship.data.attributes.confirmed_at === null) {
+      return 'Pending';
+    }
   },
   friendship: function friendship(state) {
     return state.user.data.attributes.friendship;
@@ -20797,38 +20800,31 @@ var actions = {
     commit('setUserStatus', 'Loading');
     return axios.get('/api/users/' + userId).then(function (res) {
       commit('setUser', res.data);
-      commit('setUserStatus', 'Success');
-      dispatch('fetchFriendBtn');
+      commit('setUserStatus', 'Success'); // dispatch('fetchFriendBtn');
     })["catch"](function (error) {
       commit('setUserStatus', 'Error');
     });
   },
-  fetchFriendBtn: function fetchFriendBtn(_ref2) {
+  // fetchFriendBtn({commit, getters, rootGetters}) {
+  //   // if(getters.user.data.user_id === rootGetters['user/authUser'].data.user_id){
+  //   //   commit('setFriendBtnText', '');
+  //   //   return;
+  //   // }
+  //   if(getters.friendship === null) {
+  //     commit('setFriendBtnText', 'Add Friend');
+  //   } else if(getters.friendship.data.attributes.confirmed_at === null) {
+  //     commit('setFriendBtnText', 'Pending');
+  //   }
+  // },
+  sendFriendRequest: function sendFriendRequest(_ref2, friendId) {
     var commit = _ref2.commit,
-        getters = _ref2.getters;
-
-    if (getters.user.data.user_id === this.$route.params.userId) {
-      commit('setFriendBtnText', '');
-      return;
-    }
-
-    if (getters.friendship === null) {
-      commit('setFriendBtnText', 'Add Friend');
-    } else if (getters.friendship.data.attributes.confirmed_at === null) {
-      commit('setFriendBtnText', 'Pending');
-    }
-  },
-  sendFriendRequest: function sendFriendRequest(_ref3, friendId) {
-    var commit = _ref3.commit,
-        state = _ref3.state;
-    commit('setFriendBtnText', 'Loading');
+        state = _ref2.state;
+    // commit('setFriendBtnText', 'Loading');
     axios.post('/api/friend-request', {
       'friend_id': friendId
     }).then(function () {
-      commit('setFriendBtnText', 'Pending');
-    })["catch"](function () {
-      commit('setFriendBtnText', 'Add Friend');
-    });
+      commit('setUserFriendship', res.data);
+    })["catch"](function () {});
   }
 };
 var mutations = {
@@ -20838,8 +20834,11 @@ var mutations = {
   setUserStatus: function setUserStatus(state, status) {
     state.userStatus = status;
   },
-  setFriendBtnText: function setFriendBtnText(state, text) {
-    state.friendBtnText = text;
+  // setFriendBtnText(state, text) {
+  //   state.friendBtnText = text;
+  // }
+  setUserFriendship: function setUserFriendship(state, friendship) {
+    state.user.data.attributes.friendship = friendship;
   }
 };
 /* harmony default export */ __webpack_exports__["default"] = ({
