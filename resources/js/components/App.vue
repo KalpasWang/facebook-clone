@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="authUser">
     <Navbar/>
     <div class="w-full">
       <router-view :key="$route.fullPath"></router-view>
@@ -9,12 +9,14 @@
 
 <script>
   import Navbar from './Navbar';
+  import { mapGetters } from 'vuex';
 
   export default {
       name: 'App',
       components: {
         Navbar
       },
+      computed: mapGetters(['authUser']),
       watch: {
         $route(to, from) {
           this.$store.dispatch('fetchPageTitle', to.meta.title);

@@ -7,10 +7,16 @@ const getters = {
   user(state) {
     return state.user;
   },
-  friendBtnText(state, getters) {
+  friendBtnText(state, getters, rootState) {
+    if(state.user !== null && rootState.User.user.data.user_id === state.user.data.user_id) {
+      return '';
+    }
+
     if(getters.friendship === null) {
       return 'Add Friend';
-    } else if(getters.friendship.data.attributes.confirmed_at === null) {
+    } 
+    
+    if(getters.friendship.data.attributes.confirmed_at === null) {
       return 'Pending';
     }
   },

@@ -15,12 +15,12 @@
         <p class="text-2xl text-center">{{ user.data.attributes.name }}</p>
       </div>
 
-      <div class="absolute flex items-center bottom-0 right-0 mb-4 mr-12 z-10">
-        <button v-if="friendBtnText" 
-                class="py-1 px-3 bg-gray-400 hover:bg-gray-500 rounded focus:outline-none"
-                @click="$store.dispatch('sendFriendRequest', $route.params.userId)">
-          {{ friendBtnText }}
-        </button>
+      <div 
+        v-if="friendBtnText" 
+        class="absolute bottom-0 right-0 mb-4 mr-12 z-10"
+        
+      >
+        <RoundedButton :key="btnKey" :btnText="friendBtnText" v-on:click="sendRequest" />
       </div>
     </div>
 
@@ -34,6 +34,7 @@
 
 <script>
 import Post from "../../components/Post";
+import RoundedButton from "../../components/RoundedButton"
 import { mapGetters } from "vuex";
 
 export default {
@@ -46,12 +47,19 @@ export default {
       postsLoading: true,
       userErrorMsg: null,
       postsErrorMsg: null,
+      btnKey: 0,
     }
   },
   components: {
-    Post
+    Post, RoundedButton
   },
-  computed: mapGetters(['user', 'friendBtnText']),
+  computed: mapGetters(['user', 'friendBtnText', 'friendship']),
+  methods: {
+    async sendRequest() {
+      await this.$store.dispatch('sendFriendRequest', this.$route.params.userId);
+      this.btnKey += 1;
+    }
+  },
   mounted() {
      this.$store.dispatch('fetchUser', this.$route.params.userId)
       .then(() => {
