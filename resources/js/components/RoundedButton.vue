@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="inline-block">
     <button 
       class="py-1 px-3 bg-gray-300 hover:bg-gray-500 rounded-full focus:outline-none"
       @click="action"

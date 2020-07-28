@@ -2364,6 +2364,23 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -3694,7 +3711,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
+  return _c("div", { staticClass: "inline-block" }, [
     _c(
       "button",
       {
@@ -3838,22 +3855,50 @@ var render = function() {
             ]
           ),
           _vm._v(" "),
-          _vm.friendBtnText
-            ? _c(
-                "div",
-                { staticClass: "absolute bottom-0 right-0 mb-4 mr-12 z-10" },
-                [
-                  _c("RoundedButton", {
+          _c(
+            "div",
+            { staticClass: "absolute bottom-0 right-0 mb-4 mr-12 z-10" },
+            [
+              _vm.friendBtnText && _vm.friendBtnText !== "Accept"
+                ? _c("RoundedButton", {
                     attrs: {
                       isDisabled: _vm.isDisabled,
                       btnText: _vm.friendBtnText
                     },
                     on: { event: _vm.sendRequest }
                   })
-                ],
-                1
-              )
-            : _vm._e()
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.friendBtnText && _vm.friendBtnText === "Accept"
+                ? _c("RoundedButton", {
+                    attrs: { isDisabled: _vm.isDisabled, btnText: "Accept" },
+                    on: {
+                      event: function($event) {
+                        return _vm.$store.dispatch(
+                          "acceptFriendRequest",
+                          _vm.$route.params.userId
+                        )
+                      }
+                    }
+                  })
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.friendBtnText && _vm.friendBtnText === "Accept"
+                ? _c("RoundedButton", {
+                    attrs: { isDisabled: _vm.isDisabled, btnText: "Ignore" },
+                    on: {
+                      event: function($event) {
+                        return _vm.$store.dispatch(
+                          "ignoreFriendRequest",
+                          _vm.$route.params.userId
+                        )
+                      }
+                    }
+                  })
+                : _vm._e()
+            ],
+            1
+          )
         ]),
     _vm._v(" "),
     _c(
@@ -20933,9 +20978,15 @@ var getters = {
       return 'Add Friend';
     }
 
-    if (getters.friendship.data.attributes.confirmed_at === null) {
+    if (getters.friendship.data.attributes.confirmed_at === null && getters.friendship.data.attributes.friend_id !== rootState.User.user.data.user_id) {
       return 'Pending';
     }
+
+    if (getters.friendship.data.attributes.confirmed_at !== null) {
+      return '';
+    }
+
+    return 'Accept';
   },
   friendship: function friendship(state) {
     return state.user.data.attributes.friendship;
@@ -20948,30 +20999,38 @@ var actions = {
     commit('setUserStatus', 'Loading');
     return axios.get('/api/users/' + userId).then(function (res) {
       commit('setUser', res.data);
-      commit('setUserStatus', 'Success'); // dispatch('fetchFriendBtn');
+      commit('setUserStatus', 'Success');
     })["catch"](function (error) {
       commit('setUserStatus', 'Error');
     });
   },
-  // fetchFriendBtn({commit, getters, rootGetters}) {
-  //   // if(getters.user.data.user_id === rootGetters['user/authUser'].data.user_id){
-  //   //   commit('setFriendBtnText', '');
-  //   //   return;
-  //   // }
-  //   if(getters.friendship === null) {
-  //     commit('setFriendBtnText', 'Add Friend');
-  //   } else if(getters.friendship.data.attributes.confirmed_at === null) {
-  //     commit('setFriendBtnText', 'Pending');
-  //   }
-  // },
   sendFriendRequest: function sendFriendRequest(_ref2, friendId) {
     var commit = _ref2.commit,
         state = _ref2.state;
-    // commit('setFriendBtnText', 'Loading');
     axios.post('/api/friend-request', {
       'friend_id': friendId
     }).then(function (res) {
       commit('setUserFriendship', res.data);
+    })["catch"](function () {});
+  },
+  acceptFriendRequest: function acceptFriendRequest(_ref3, userId) {
+    var commit = _ref3.commit,
+        state = _ref3.state;
+    axios.post('/api/friend-request-response', {
+      'user_id': userId
+    }).then(function (res) {
+      commit('setUserFriendship', res.data);
+    })["catch"](function () {});
+  },
+  ignoreFriendRequest: function ignoreFriendRequest(_ref4, userId) {
+    var commit = _ref4.commit,
+        state = _ref4.state;
+    axios["delete"]('/api/friend-request-response/delete', {
+      data: {
+        'user_id': userId
+      }
+    }).then(function (res) {
+      commit('setUserFriendship', null);
     })["catch"](function () {});
   }
 };
@@ -20982,9 +21041,6 @@ var mutations = {
   setUserStatus: function setUserStatus(state, status) {
     state.userStatus = status;
   },
-  // setFriendBtnText(state, text) {
-  //   state.friendBtnText = text;
-  // }
   setUserFriendship: function setUserFriendship(state, friendship) {
     state.user.data.attributes.friendship = friendship;
   }

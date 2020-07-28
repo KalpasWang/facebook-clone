@@ -15,8 +15,25 @@
         <p class="text-2xl text-center">{{ user.data.attributes.name }}</p>
       </div>
 
-      <div v-if="friendBtnText" class="absolute bottom-0 right-0 mb-4 mr-12 z-10">
-        <RoundedButton :isDisabled="isDisabled" :btnText="friendBtnText" @event="sendRequest" />
+      <div class="absolute bottom-0 right-0 mb-4 mr-12 z-10">
+        <RoundedButton 
+          v-if="friendBtnText && friendBtnText !== 'Accept'" 
+          :isDisabled="isDisabled" 
+          :btnText="friendBtnText" 
+          @event="sendRequest" 
+        />
+        <RoundedButton 
+          v-if="friendBtnText && friendBtnText === 'Accept'" 
+          :isDisabled="isDisabled" 
+          :btnText="'Accept'"
+           @event="$store.dispatch('acceptFriendRequest', $route.params.userId);" 
+        />
+        <RoundedButton 
+          v-if="friendBtnText && friendBtnText === 'Accept'" 
+          :isDisabled="isDisabled" 
+          :btnText="'Ignore'" 
+          @event="$store.dispatch('ignoreFriendRequest', $route.params.userId);" 
+        />
       </div>
     </div>
 
