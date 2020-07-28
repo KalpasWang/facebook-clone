@@ -53,7 +53,7 @@ const actions = {
   sendFriendRequest({commit, state}, friendId) {
     // commit('setFriendBtnText', 'Loading');
     axios.post('/api/friend-request', { 'friend_id': friendId })
-      .then(() => {
+      .then(res => {
         commit('setUserFriendship', res.data);
       })
       .catch(() => {

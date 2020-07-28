@@ -15,12 +15,8 @@
         <p class="text-2xl text-center">{{ user.data.attributes.name }}</p>
       </div>
 
-      <div 
-        v-if="friendBtnText" 
-        class="absolute bottom-0 right-0 mb-4 mr-12 z-10"
-        
-      >
-        <RoundedButton :key="btnKey" :btnText="friendBtnText" v-on:click="sendRequest" />
+      <div v-if="friendBtnText" class="absolute bottom-0 right-0 mb-4 mr-12 z-10">
+        <RoundedButton :isDisabled="isDisabled" :btnText="friendBtnText" @event="sendRequest" />
       </div>
     </div>
 
@@ -47,17 +43,21 @@ export default {
       postsLoading: true,
       userErrorMsg: null,
       postsErrorMsg: null,
-      btnKey: 0,
     }
   },
   components: {
     Post, RoundedButton
   },
-  computed: mapGetters(['user', 'friendBtnText', 'friendship']),
+  computed: {
+    isDisabled() {
+      if(this.friendBtnText === 'Pending') return true;
+      return false;
+    },
+    ...mapGetters(['user', 'friendBtnText', 'friendship'])
+  },
   methods: {
-    async sendRequest() {
-      await this.$store.dispatch('sendFriendRequest', this.$route.params.userId);
-      this.btnKey += 1;
+    sendRequest() {
+      this.$store.dispatch('sendFriendRequest', this.$route.params.userId);
     }
   },
   mounted() {

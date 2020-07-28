@@ -1,8 +1,10 @@
 <template>
   <div>
-    <button class="py-1 px-3 bg-gray-300 hover:bg-gray-500 rounded-full focus:outline-none"
-            @click="action"
-            >
+    <button 
+      class="py-1 px-3 bg-gray-300 hover:bg-gray-500 rounded-full focus:outline-none"
+      @click="action"
+      :disabled="isDisabled"
+    >
       {{ btnText }}
     </button>
   </div>
@@ -11,10 +13,10 @@
 <script>
 export default {
   name: 'RoundedButton',
-  props: ['btnText'],
+  props: ['btnText', 'isDisabled'],
   methods: { 
     action() {
-      this.$emit('click')
+      this.$emit('event')
     } 
   }
 }
