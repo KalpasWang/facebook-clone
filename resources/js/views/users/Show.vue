@@ -1,8 +1,8 @@
 <template>
   <div class="flex flex-col items-center">
-    <div v-if="userLoading">Loading User Profile...</div>
-    <div v-else-if="userErrorMsg">{{ userErrorMsg }}</div>
-    <div v-else class="relative">
+    <div v-if="status.user === 'Loading'">Loading User Profile...</div>
+    <div v-else-if="status.user === 'Error'">{{ status.user }}</div>
+    <div v-else-if="status.user === 'Success' && user" class="relative">
       <div class="w-100 h-64 overflow-hidden z-0">
         <img src="https://cdn.pixabay.com/photo/2017/03/26/12/13/countryside-2175353_960_720.jpg" alt="user background image" class="object-cover w-full">
       </div>
@@ -38,9 +38,13 @@
     </div>
 
     <div class="mt-32">
-      <div v-if="postsLoading">Loading Your Posts</div>
-      <div v-else-if="postsErrorMsg">{{ postsErrorMsg }}</div>
-      <Post v-else v-for="post in posts.data" :key="post.data.post_id" :post="post"/>
+      <div v-if="status.posts === 'Loading'">Loading Your Posts...</div>
+      <div v-else-if="status.posts === 'Error'">{{ status.posts }}</div>
+      <div v-else-if="posts && posts.length < 1">{{ 'sorry, you have no posts yet...' }}</div>
+      <Post 
+        v-else-if="status.posts === 'Success' && posts" 
+        v-for="post in posts.data" :key="post.data.post_id" :post="post"
+      />
     </div>
   </div>
 </template>
@@ -54,12 +58,7 @@ export default {
   name: 'Show',
   data() {
     return {
-      // user: null,
-      posts: null,
-      userLoading: true,
-      postsLoading: true,
-      userErrorMsg: null,
-      postsErrorMsg: null,
+
     }
   },
   components: {
@@ -70,7 +69,7 @@ export default {
       if(this.friendBtnText === 'Pending') return true;
       return false;
     },
-    ...mapGetters(['user', 'friendBtnText', 'friendship'])
+    ...mapGetters(['user', 'posts', 'status', 'friendBtnText', 'friendship'])
   },
   methods: {
     sendRequest() {
@@ -78,20 +77,8 @@ export default {
     }
   },
   mounted() {
-     this.$store.dispatch('fetchUser', this.$route.params.userId)
-      .then(() => {
-        this.userLoading = false;
-      });
-
-    axios.get('/api/users/' + this.$route.params.userId + '/posts')
-      .then(res => {
-        this.posts = res.data;
-        this.postsLoading = false;
-      })
-      .catch(error => {
-        this.postsErrorMsg = 'Unable to fetch posts';
-        this.postsLoading = false;
-      });
+    this.$store.dispatch('fetchUser', this.$route.params.userId)
+    this.$store.dispatch('fetchUserPosts', this.$route.params.userId)
   },
 }
 </script>

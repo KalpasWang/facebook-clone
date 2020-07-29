@@ -2381,20 +2381,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'Show',
   data: function data() {
-    return {
-      // user: null,
-      posts: null,
-      userLoading: true,
-      postsLoading: true,
-      userErrorMsg: null,
-      postsErrorMsg: null
-    };
+    return {};
   },
   components: {
     Post: _components_Post__WEBPACK_IMPORTED_MODULE_0__["default"],
@@ -2405,25 +2402,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       if (this.friendBtnText === 'Pending') return true;
       return false;
     }
-  }, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapGetters"])(['user', 'friendBtnText', 'friendship'])),
+  }, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapGetters"])(['user', 'posts', 'status', 'friendBtnText', 'friendship'])),
   methods: {
     sendRequest: function sendRequest() {
       this.$store.dispatch('sendFriendRequest', this.$route.params.userId);
     }
   },
   mounted: function mounted() {
-    var _this = this;
-
-    this.$store.dispatch('fetchUser', this.$route.params.userId).then(function () {
-      _this.userLoading = false;
-    });
-    axios.get('/api/users/' + this.$route.params.userId + '/posts').then(function (res) {
-      _this.posts = res.data;
-      _this.postsLoading = false;
-    })["catch"](function (error) {
-      _this.postsErrorMsg = 'Unable to fetch posts';
-      _this.postsLoading = false;
-    });
+    this.$store.dispatch('fetchUser', this.$route.params.userId);
+    this.$store.dispatch('fetchUserPosts', this.$route.params.userId);
   }
 });
 
@@ -3833,11 +3820,12 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "flex flex-col items-center" }, [
-    _vm.userLoading
+    _vm.status.user === "Loading"
       ? _c("div", [_vm._v("Loading User Profile...")])
-      : _vm.userErrorMsg
-      ? _c("div", [_vm._v(_vm._s(_vm.userErrorMsg))])
-      : _c("div", { staticClass: "relative" }, [
+      : _vm.status.user === "Error"
+      ? _c("div", [_vm._v(_vm._s(_vm.status.user))])
+      : _vm.status.user === "Success" && _vm.user
+      ? _c("div", { staticClass: "relative" }, [
           _vm._m(0),
           _vm._v(" "),
           _c(
@@ -3899,22 +3887,27 @@ var render = function() {
             ],
             1
           )
-        ]),
+        ])
+      : _vm._e(),
     _vm._v(" "),
     _c(
       "div",
       { staticClass: "mt-32" },
       [
-        _vm.postsLoading
-          ? _c("div", [_vm._v("Loading Your Posts")])
-          : _vm.postsErrorMsg
-          ? _c("div", [_vm._v(_vm._s(_vm.postsErrorMsg))])
-          : _vm._l(_vm.posts.data, function(post) {
+        _vm.status.posts === "Loading"
+          ? _c("div", [_vm._v("Loading Your Posts...")])
+          : _vm.status.posts === "Error"
+          ? _c("div", [_vm._v(_vm._s(_vm.status.posts))])
+          : _vm.posts && _vm.posts.length < 1
+          ? _c("div", [_vm._v(_vm._s("sorry, you have no posts yet..."))])
+          : _vm.status.posts === "Success" && _vm.posts
+          ? _vm._l(_vm.posts.data, function(post) {
               return _c("Post", {
                 key: post.data.post_id,
                 attrs: { post: post }
               })
             })
+          : _vm._e()
       ],
       2
     )
@@ -20963,11 +20956,22 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 __webpack_require__.r(__webpack_exports__);
 var state = {
   user: null,
-  userStatus: null
+  userStatus: null,
+  posts: null,
+  postsStatus: null
 };
 var getters = {
   user: function user(state) {
     return state.user;
+  },
+  posts: function posts(state) {
+    return state.posts;
+  },
+  status: function status(state) {
+    return {
+      user: state.userStatus,
+      posts: state.postsStatus
+    };
   },
   friendBtnText: function friendBtnText(state, getters, rootState) {
     if (state.user !== null && rootState.User.user.data.user_id === state.user.data.user_id) {
@@ -20997,25 +21001,36 @@ var actions = {
     var commit = _ref.commit,
         dispatch = _ref.dispatch;
     commit('setUserStatus', 'Loading');
-    return axios.get('/api/users/' + userId).then(function (res) {
+    axios.get('/api/users/' + userId).then(function (res) {
       commit('setUser', res.data);
       commit('setUserStatus', 'Success');
     })["catch"](function (error) {
       commit('setUserStatus', 'Error');
     });
   },
-  sendFriendRequest: function sendFriendRequest(_ref2, friendId) {
+  fetchUserPosts: function fetchUserPosts(_ref2, userId) {
     var commit = _ref2.commit,
-        state = _ref2.state;
+        dispatch = _ref2.dispatch;
+    commit('setPostsStatus', 'Loading');
+    axios.get('/api/users/' + userId + '/posts').then(function (res) {
+      commit('setPosts', res.data);
+      commit('setPostsStatus', 'Success');
+    })["catch"](function (error) {
+      commit('setPostsStatus', 'Error');
+    });
+  },
+  sendFriendRequest: function sendFriendRequest(_ref3, friendId) {
+    var commit = _ref3.commit,
+        state = _ref3.state;
     axios.post('/api/friend-request', {
       'friend_id': friendId
     }).then(function (res) {
       commit('setUserFriendship', res.data);
     })["catch"](function () {});
   },
-  acceptFriendRequest: function acceptFriendRequest(_ref3, userId) {
-    var commit = _ref3.commit,
-        state = _ref3.state;
+  acceptFriendRequest: function acceptFriendRequest(_ref4, userId) {
+    var commit = _ref4.commit,
+        state = _ref4.state;
     axios.post('/api/friend-request-response', {
       'user_id': userId,
       'status': 1
@@ -21023,9 +21038,9 @@ var actions = {
       commit('setUserFriendship', res.data);
     })["catch"](function () {});
   },
-  ignoreFriendRequest: function ignoreFriendRequest(_ref4, userId) {
-    var commit = _ref4.commit,
-        state = _ref4.state;
+  ignoreFriendRequest: function ignoreFriendRequest(_ref5, userId) {
+    var commit = _ref5.commit,
+        state = _ref5.state;
     axios["delete"]('/api/friend-request-response/delete', {
       data: {
         'user_id': userId
@@ -21039,8 +21054,14 @@ var mutations = {
   setUser: function setUser(state, user) {
     state.user = user;
   },
+  setPosts: function setPosts(state, posts) {
+    state.posts = posts;
+  },
   setUserStatus: function setUserStatus(state, status) {
     state.userStatus = status;
+  },
+  setPostsStatus: function setPostsStatus(state, status) {
+    state.postsStatus = status;
   },
   setUserFriendship: function setUserFriendship(state, friendship) {
     state.user.data.attributes.friendship = friendship;
