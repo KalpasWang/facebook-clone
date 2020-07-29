@@ -58,7 +58,7 @@ const actions = {
   },
 
   acceptFriendRequest({commit, state}, userId) {
-    axios.post('/api/friend-request-response', { 'user_id': userId })
+    axios.post('/api/friend-request-response', { 'user_id': userId, 'status': 1 })
       .then(res => {
         commit('setUserFriendship', res.data);
       })

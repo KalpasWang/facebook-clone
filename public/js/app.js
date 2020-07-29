@@ -21017,7 +21017,8 @@ var actions = {
     var commit = _ref3.commit,
         state = _ref3.state;
     axios.post('/api/friend-request-response', {
-      'user_id': userId
+      'user_id': userId,
+      'status': 1
     }).then(function (res) {
       commit('setUserFriendship', res.data);
     })["catch"](function () {});
