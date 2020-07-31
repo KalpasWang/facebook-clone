@@ -28,9 +28,9 @@ const getters = {
 
     if(getters.friendship === null) {
       return 'Add Friend';
-    } 
-    
-    if(getters.friendship.data.attributes.confirmed_at === null && 
+    }
+
+    if(getters.friendship.data.attributes.confirmed_at === null &&
       getters.friendship.data.attributes.friend_id !== rootState.User.user.data.user_id) {
       return 'Pending';
     }
@@ -72,7 +72,8 @@ const actions = {
       });
   },
 
-  sendFriendRequest({commit, state}, friendId) {
+  sendFriendRequest({commit, getters}, friendId) {
+    if(getters.friendBtnText !== 'Add Friend') return;
     axios.post('/api/friend-request', { 'friend_id': friendId })
       .then(res => {
         commit('setUserFriendship', res.data);

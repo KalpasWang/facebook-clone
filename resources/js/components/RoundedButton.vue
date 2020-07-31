@@ -1,7 +1,8 @@
 <template>
   <div class="inline-block">
-    <button 
-      class="py-1 px-3 bg-gray-300 hover:bg-gray-500 rounded-full focus:outline-none"
+    <button
+      :class="['py-1', 'px-3', 'bg-gray-300', 'rounded-full', 'focus:outline-none',
+               { 'hover:bg-gray-500': !isDisabled }, { 'cursor-default': isDisabled }]"
       @click="action"
       :disabled="isDisabled"
     >
@@ -14,10 +15,10 @@
 export default {
   name: 'RoundedButton',
   props: ['btnText', 'isDisabled'],
-  methods: { 
+  methods: {
     action() {
       this.$emit('event')
-    } 
+    }
   }
 }
 </script>

@@ -2245,6 +2245,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'RoundedButton',
   props: ['btnText', 'isDisabled'],
@@ -3702,8 +3703,15 @@ var render = function() {
     _c(
       "button",
       {
-        staticClass:
-          "py-1 px-3 bg-gray-300 hover:bg-gray-500 rounded-full focus:outline-none",
+        class: [
+          "py-1",
+          "px-3",
+          "bg-gray-300",
+          "rounded-full",
+          "focus:outline-none",
+          { "hover:bg-gray-500": !_vm.isDisabled },
+          { "cursor-default": _vm.isDisabled }
+        ],
         attrs: { disabled: _vm.isDisabled },
         on: { click: _vm.action }
       },
@@ -21021,7 +21029,8 @@ var actions = {
   },
   sendFriendRequest: function sendFriendRequest(_ref3, friendId) {
     var commit = _ref3.commit,
-        state = _ref3.state;
+        getters = _ref3.getters;
+    if (getters.friendBtnText !== 'Add Friend') return;
     axios.post('/api/friend-request', {
       'friend_id': friendId
     }).then(function (res) {
