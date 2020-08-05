@@ -4,19 +4,21 @@
     <div class="w-full">
       <router-view :key="$route.fullPath"></router-view>
     </div>
+    <NewPostModal :class="{'hidden': !isModalOpen}"/>
   </div>
 </template>
 
 <script>
   import Navbar from './Navbar';
+  import NewPostModal from "./NewPostModal";
   import { mapGetters } from 'vuex';
 
   export default {
       name: 'App',
       components: {
-        Navbar
+        Navbar, NewPostModal
       },
-      computed: mapGetters(['authUser']),
+      computed: mapGetters(['authUser', 'isModalOpen']),
       watch: {
         $route(to, from) {
           this.$store.dispatch('fetchPageTitle', to.meta.title);
