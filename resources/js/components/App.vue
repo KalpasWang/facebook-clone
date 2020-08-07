@@ -4,7 +4,7 @@
     <div class="w-full">
       <router-view :key="$route.fullPath"></router-view>
     </div>
-    <NewPostModal :class="{'hidden': !isModalOpen}"/>
+    <NewPostModal v-if="isModalOpen"/>
   </div>
 </template>
 

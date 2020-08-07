@@ -5593,6 +5593,10 @@ video {
   height: 28px;
 }
 
+.h-500px {
+  height: 500px;
+}
+
 .text-xs {
   font-size: 0.75rem;
 }
@@ -5663,6 +5667,10 @@ video {
 
 .leading-10 {
   line-height: 2.5rem;
+}
+
+.leading-16 {
+  line-height: 4rem;
 }
 
 .leading-none {
@@ -13265,6 +13273,10 @@ video {
   width: 28px;
 }
 
+.w-500px {
+  width: 500px;
+}
+
 .z-0 {
   z-index: 0;
 }
@@ -20705,6 +20717,10 @@ video {
     height: 28px;
   }
 
+  .sm\:h-500px {
+    height: 500px;
+  }
+
   .sm\:text-xs {
     font-size: 0.75rem;
   }
@@ -20775,6 +20791,10 @@ video {
 
   .sm\:leading-10 {
     line-height: 2.5rem;
+  }
+
+  .sm\:leading-16 {
+    line-height: 4rem;
   }
 
   .sm\:leading-none {
@@ -28377,6 +28397,10 @@ video {
     width: 28px;
   }
 
+  .sm\:w-500px {
+    width: 500px;
+  }
+
   .sm\:z-0 {
     z-index: 0;
   }
@@ -35818,6 +35842,10 @@ video {
     height: 28px;
   }
 
+  .md\:h-500px {
+    height: 500px;
+  }
+
   .md\:text-xs {
     font-size: 0.75rem;
   }
@@ -35888,6 +35916,10 @@ video {
 
   .md\:leading-10 {
     line-height: 2.5rem;
+  }
+
+  .md\:leading-16 {
+    line-height: 4rem;
   }
 
   .md\:leading-none {
@@ -43490,6 +43522,10 @@ video {
     width: 28px;
   }
 
+  .md\:w-500px {
+    width: 500px;
+  }
+
   .md\:z-0 {
     z-index: 0;
   }
@@ -50931,6 +50967,10 @@ video {
     height: 28px;
   }
 
+  .lg\:h-500px {
+    height: 500px;
+  }
+
   .lg\:text-xs {
     font-size: 0.75rem;
   }
@@ -51001,6 +51041,10 @@ video {
 
   .lg\:leading-10 {
     line-height: 2.5rem;
+  }
+
+  .lg\:leading-16 {
+    line-height: 4rem;
   }
 
   .lg\:leading-none {
@@ -58603,6 +58647,10 @@ video {
     width: 28px;
   }
 
+  .lg\:w-500px {
+    width: 500px;
+  }
+
   .lg\:z-0 {
     z-index: 0;
   }
@@ -66044,6 +66092,10 @@ video {
     height: 28px;
   }
 
+  .xl\:h-500px {
+    height: 500px;
+  }
+
   .xl\:text-xs {
     font-size: 0.75rem;
   }
@@ -66114,6 +66166,10 @@ video {
 
   .xl\:leading-10 {
     line-height: 2.5rem;
+  }
+
+  .xl\:leading-16 {
+    line-height: 4rem;
   }
 
   .xl\:leading-none {
@@ -73714,6 +73770,10 @@ video {
 
   .xl\:w-28px {
     width: 28px;
+  }
+
+  .xl\:w-500px {
+    width: 500px;
   }
 
   .xl\:z-0 {
