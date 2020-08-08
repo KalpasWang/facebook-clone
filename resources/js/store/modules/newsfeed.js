@@ -1,7 +1,8 @@
 const state = {
   newPosts: null,
   newPostsStatus: 'Loading',
-  errorMsg: null
+  errorMsg: null,
+  createNewPostStatus: null
 };
 
 const getters = {
@@ -16,6 +17,10 @@ const getters = {
   errorMsg(state) {
     return state.errorMsg;
   },
+
+  createNewPostStatus(state) {
+    return state.createNewPostStatus;
+  }
 };
 
 const actions = {
@@ -29,6 +34,18 @@ const actions = {
       commit('setPostsStatus', 'Error');
       commit('setError', error);
     })
+  },
+
+  createNewPost({commit, state}, postMsg) {
+    commit('setCreateNewPostStatus', 'Loading');
+    axios.post('/api/posts', { 'body': postMsg })
+      .then(res => {
+        commit('addToNewsFeed', res.data);
+        commit('setCreateNewPostStatus', 'Success');
+      })
+      .catch(error => {
+        console.log(error);
+      })
   }
 };
 
@@ -44,6 +61,14 @@ const mutations = {
   setError(state, error) {
     state.errorMsg = error;
   },
+
+  addToNewsFeed(state, newPost) {
+    state.newPosts.data.unshift(newPost);
+  },
+
+  setCreateNewPostStatus(state, status) {
+    state.createNewPostStatus = status;
+  }
 };
 
 export default {

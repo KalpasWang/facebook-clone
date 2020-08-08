@@ -2176,14 +2176,21 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   name: 'NewPostModal',
   data: function data() {
     return {
-      timesIcon: '<i class="fas fa-times"></i>'
+      timesIcon: '<i class="fas fa-times fa-2x"></i>'
     };
   },
   components: {
     RoundedButton: _RoundedButton__WEBPACK_IMPORTED_MODULE_1__["default"],
     Avatar: _Avatar__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['authUser']))
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['authUser'])),
+  methods: {
+    sendPost: function sendPost() {
+      this.$store.dispatch('createNewPost', this.$refs.postMsg.value);
+      this.$store.commit('setModalState', false);
+      console.log('send post');
+    }
+  }
 });
 
 /***/ }),
@@ -4161,6 +4168,7 @@ var render = function() {
             _c("div", { staticClass: "p-4 flex-grow" }, [
               _c(
                 "div",
+                { staticClass: "mb-4" },
                 [
                   _c("Avatar", {
                     attrs: {
@@ -4173,18 +4181,20 @@ var render = function() {
               ),
               _vm._v(" "),
               _c("textarea", {
-                staticClass: "block w-full h-full",
-                attrs: { name: "", cols: "30", rows: "10" }
+                ref: "postMsg",
+                staticClass:
+                  "block w-full h-full text-lg resize-none outline-none"
               })
             ]),
             _vm._v(" "),
             _c(
               "div",
-              { staticClass: "w-full p-4" },
+              { staticClass: "w-full p-4 mt-4" },
               [
                 _c("RoundedButton", {
                   staticClass: "w-full",
-                  attrs: { btnText: "送出" }
+                  attrs: { btnText: "送出" },
+                  on: { event: _vm.sendPost }
                 })
               ],
               1
@@ -21926,7 +21936,8 @@ __webpack_require__.r(__webpack_exports__);
 var state = {
   newPosts: null,
   newPostsStatus: 'Loading',
-  errorMsg: null
+  errorMsg: null,
+  createNewPostStatus: null
 };
 var getters = {
   newPosts: function newPosts(state) {
@@ -21937,6 +21948,9 @@ var getters = {
   },
   errorMsg: function errorMsg(state) {
     return state.errorMsg;
+  },
+  createNewPostStatus: function createNewPostStatus(state) {
+    return state.createNewPostStatus;
   }
 };
 var actions = {
@@ -21950,6 +21964,19 @@ var actions = {
       commit('setPostsStatus', 'Error');
       commit('setError', error);
     });
+  },
+  createNewPost: function createNewPost(_ref2, postMsg) {
+    var commit = _ref2.commit,
+        state = _ref2.state;
+    commit('setCreateNewPostStatus', 'Loading');
+    axios.post('/api/posts', {
+      'body': postMsg
+    }).then(function (res) {
+      commit('addToNewsFeed', res.data);
+      commit('setCreateNewPostStatus', 'Success');
+    })["catch"](function (error) {
+      console.log(error);
+    });
   }
 };
 var mutations = {
@@ -21961,6 +21988,12 @@ var mutations = {
   },
   setError: function setError(state, error) {
     state.errorMsg = error;
+  },
+  addToNewsFeed: function addToNewsFeed(state, newPost) {
+    state.newPosts.data.unshift(newPost);
+  },
+  setCreateNewPostStatus: function setCreateNewPostStatus(state, status) {
+    state.createNewPostStatus = status;
   }
 };
 /* harmony default export */ __webpack_exports__["default"] = ({

@@ -10,13 +10,13 @@
         </div>
         <hr>
         <div class="p-4 flex-grow">
-          <div>
+          <div class="mb-4">
             <Avatar :username="authUser.data.attributes.name" :path="`/users/${authUser.data.user_id}`"/>
           </div>
-          <textarea name="" class="block w-full h-full" cols="30" rows="10"></textarea>
+          <textarea ref="postMsg" class="block w-full h-full text-lg resize-none outline-none"></textarea>
         </div>
-        <div class="w-full p-4">
-            <RoundedButton class="w-full" btnText="送出"/>
+        <div class="w-full p-4 mt-4">
+            <RoundedButton class="w-full" btnText="送出" @event="sendPost"/>
         </div>
       </div>
     </div>
@@ -32,12 +32,19 @@ export default {
   name: 'NewPostModal',
   data() {
     return {
-      timesIcon: '<i class="fas fa-times"></i>'
+      timesIcon: '<i class="fas fa-times fa-2x"></i>'
     }
   },
   components: { RoundedButton, Avatar},
   computed: {
     ...mapGetters(['authUser']),
+  },
+  methods: {
+    sendPost() {
+      this.$store.dispatch('createNewPost', this.$refs.postMsg.value);
+      this.$store.commit('setModalState', false);
+      console.log('send post');
+    }
   }
 }
 </script>
