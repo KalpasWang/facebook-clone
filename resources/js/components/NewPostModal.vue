@@ -43,7 +43,6 @@ export default {
     sendPost() {
       this.$store.dispatch('createNewPost', this.$refs.postMsg.value);
       this.$store.commit('setModalState', false);
-      console.log('send post');
     }
   }
 }
