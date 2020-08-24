@@ -15,13 +15,18 @@ class Post extends Model
 
   protected static function boot()
   {
-      parent::boot();
+    parent::boot();
 
-      static::addGlobalScope(new ReverseScope());
+    static::addGlobalScope(new ReverseScope());
   }
 
   public function user()
   {
     return $this->belongsTo(User::class);
+  }
+
+  public function likes()
+  {
+    return $this->belongsToMany(User::class, 'likes', 'post_id', 'user_id');
   }
 }

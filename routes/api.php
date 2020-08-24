@@ -29,6 +29,7 @@ Route::middleware('auth:api')->group(function() {
     '/users/{user}/posts' => 'UserPostsController',
     'friend-request' => 'FriendRequestsController',
     'friend-request-response' => 'FriendRequestsResponsesController',
+    'posts/{post}/likes' => 'PostLikesController',
   ]);
 
   // Route::get('/users/:userId', 'UsersController@show');
