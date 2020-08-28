@@ -16,6 +16,13 @@ class LikeCollection extends ResourceCollection
   {
     return [
       'data' => $this->collection,
+      'likes_count' => $this->count(),
+      'is_user_likes_post' => $this->collection->every(function($value, $key){
+        if(is_array($value)) {
+          return $value['user_id'] == auth()->user()->id;
+        }
+        return false;
+      }),
       'links' => [
         'self' => url('/posts')
       ]

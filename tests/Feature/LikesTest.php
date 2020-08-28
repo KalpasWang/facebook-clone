@@ -27,7 +27,7 @@ class LikesTest extends TestCase
         'data' => [
           [        
             'data' => [
-              'types' => 'likes',
+              'type' => 'likes',
               'likes_id' => 1,
               'attributes' => []
             ],
@@ -38,6 +38,47 @@ class LikesTest extends TestCase
         ],
         'links' => [
           'self' => url('/posts'),
+        ]
+      ]);
+  }
+
+  public function testPostsAreReturnedWithLikes()
+  {
+    $this->withoutExceptionHandling();
+    $this->actingAs($user = factory(User::class)->create(), 'api');
+
+    $post = factory(Post::class)->create(['id' => 123, 'user_id' => $user->id]);
+
+    $this->post('api/posts/'.$post->id.'/likes')->assertStatus(200);
+
+    $response = $this->get('api/posts')
+      ->assertStatus(200)
+      ->assertJson([
+        'data' => [
+          [
+            'data' => [
+              'type' => 'posts',
+              'post_id' => $post->id,
+              'attributes' => [
+                'likes' => [
+                  'data' => [
+                    [
+                      'data' => [
+                        'type' => 'likes',
+                        'likes_id' => 1,
+                        'attributes' => []
+                      ]
+                    ]
+                  ],
+                  'likes_count' => 1,
+                  'is_user_likes_post' => true,
+                ]
+              ]
+            ]
+          ],
+        ],
+        'links' => [
+          'self' => url('/posts')
         ]
       ]);
   }
