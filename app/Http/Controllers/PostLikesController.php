@@ -10,7 +10,7 @@ class PostLikesController extends Controller
 {
   public function store(Post $post)
   {
-    $post->likes()->toggle(auth()->user());
+    $post->likes()->toggle(auth()->user()->id);
     return new LikeCollection($post->likes);
   }
 }
