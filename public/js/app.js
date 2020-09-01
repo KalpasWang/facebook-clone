@@ -2188,7 +2188,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     sendPost: function sendPost() {
       this.$store.dispatch('createNewPost', this.$refs.postMsg.value);
       this.$store.commit('setModalState', false);
-      console.log('send post');
     }
   }
 });
@@ -2252,6 +2251,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -2297,9 +2303,31 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Post",
-  props: ['post']
+  data: function data() {
+    return {};
+  },
+  props: ['post'],
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['authUser']), {
+    isUserLikes: function isUserLikes() {
+      var _this = this;
+
+      this.post.data.attributes.likes.data.some(function (item) {
+        if (item.data.user_id === _this.authUser.data.user_id) return true;
+      });
+    }
+  }),
+  methods: {
+    clickLikeBtn: function clickLikeBtn() {
+      this.$store.dispatch('userClickLikeBtn', {
+        postId: this.post.data.post_id,
+        postKey: this.$vnode.key
+      });
+    }
+  }
 });
 
 /***/ }),
@@ -4240,11 +4268,8 @@ var render = function() {
           ? _c("div", { staticClass: "text-lg mt-10 text-center" }, [
               _vm._v(_vm._s(_vm.errorMsg))
             ])
-          : _vm._l(_vm.newPosts.data, function(post) {
-              return _c("Post", {
-                key: post.data.post_id,
-                attrs: { post: post }
-              })
+          : _vm._l(_vm.newPosts.data, function(post, idx) {
+              return _c("Post", { key: idx, attrs: { post: post } })
             })
       ],
       2
@@ -4312,120 +4337,131 @@ var render = function() {
         "div",
         { staticClass: "px-2 pt-2 flex justify-between text-gray-700 text-sm" },
         [
-          _c("div", { staticClass: "flex" }, [
-            _c(
-              "svg",
-              {
-                attrs: {
-                  width: "18",
-                  height: "18",
-                  xmlns: "http://www.w3.org/2000/svg",
-                  "xmlns:xlink": "http://www.w3.org/1999/xlink",
-                  viewBox: "0 0 16 16"
-                }
-              },
-              [
-                _c(
-                  "defs",
-                  [
-                    _c(
-                      "linearGradient",
-                      {
-                        attrs: {
-                          id: "a",
-                          x1: "50%",
-                          x2: "50%",
-                          y1: "0%",
-                          y2: "100%"
-                        }
-                      },
-                      [
-                        _c("stop", {
-                          attrs: { offset: "0%", "stop-color": "#18AFFF" }
-                        }),
-                        _c("stop", {
-                          attrs: { offset: "100%", "stop-color": "#0062DF" }
-                        })
-                      ],
-                      1
-                    ),
-                    _c(
-                      "filter",
-                      {
-                        attrs: {
-                          id: "c",
-                          width: "118.8%",
-                          height: "118.8%",
-                          x: "-9.4%",
-                          y: "-9.4%",
-                          filterUnits: "objectBoundingBox"
-                        }
-                      },
-                      [
-                        _c("feGaussianBlur", {
-                          attrs: {
-                            in: "SourceAlpha",
-                            result: "shadowBlurInner1",
-                            stdDeviation: "1"
-                          }
-                        }),
-                        _c("feOffset", {
-                          attrs: {
-                            dy: "-1",
-                            in: "shadowBlurInner1",
-                            result: "shadowOffsetInner1"
-                          }
-                        }),
-                        _c("feComposite", {
-                          attrs: {
-                            in: "shadowOffsetInner1",
-                            in2: "SourceAlpha",
-                            k2: "-1",
-                            k3: "1",
-                            operator: "arithmetic",
-                            result: "shadowInnerInner1"
-                          }
-                        }),
-                        _c("feColorMatrix", {
-                          attrs: {
-                            in: "shadowInnerInner1",
-                            values:
-                              "0 0 0 0 0 0 0 0 0 0.299356041 0 0 0 0 0.681187726 0 0 0 0.3495684 0"
-                          }
-                        })
-                      ],
-                      1
-                    ),
-                    _c("path", {
+          _c("div", [
+            _vm.post.data.attributes.likes.likes_count > 0
+              ? _c("div", { staticClass: "flex" }, [
+                  _c(
+                    "svg",
+                    {
                       attrs: {
-                        id: "b",
-                        d: "M8 0a8 8 0 00-8 8 8 8 0 1016 0 8 8 0 00-8-8z"
+                        width: "18",
+                        height: "18",
+                        xmlns: "http://www.w3.org/2000/svg",
+                        "xmlns:xlink": "http://www.w3.org/1999/xlink",
+                        viewBox: "0 0 16 16"
                       }
-                    })
-                  ],
-                  1
-                ),
-                _c("g", { attrs: { fill: "none" } }, [
-                  _c("use", { attrs: { fill: "url(#a)", "xlink:href": "#b" } }),
-                  _c("use", {
-                    attrs: {
-                      fill: "black",
-                      filter: "url(#c)",
-                      "xlink:href": "#b"
-                    }
-                  }),
-                  _c("path", {
-                    attrs: {
-                      fill: "white",
-                      d:
-                        "M12.162 7.338c.176.123.338.245.338.674 0 .43-.229.604-.474.725a.73.73 0 01.089.546c-.077.344-.392.611-.672.69.121.194.159.385.015.62-.185.295-.346.407-1.058.407H7.5c-.988 0-1.5-.546-1.5-1V7.665c0-1.23 1.467-2.275 1.467-3.13L7.361 3.47c-.005-.065.008-.224.058-.27.08-.079.301-.2.635-.2.218 0 .363.041.534.123.581.277.732.978.732 1.542 0 .271-.414 1.083-.47 1.364 0 0 .867-.192 1.879-.199 1.061-.006 1.749.19 1.749.842 0 .261-.219.523-.316.666zM3.6 7h.8a.6.6 0 01.6.6v3.8a.6.6 0 01-.6.6h-.8a.6.6 0 01-.6-.6V7.6a.6.6 0 01.6-.6z"
-                    }
-                  })
+                    },
+                    [
+                      _c(
+                        "defs",
+                        [
+                          _c(
+                            "linearGradient",
+                            {
+                              attrs: {
+                                id: "a",
+                                x1: "50%",
+                                x2: "50%",
+                                y1: "0%",
+                                y2: "100%"
+                              }
+                            },
+                            [
+                              _c("stop", {
+                                attrs: { offset: "0%", "stop-color": "#18AFFF" }
+                              }),
+                              _c("stop", {
+                                attrs: {
+                                  offset: "100%",
+                                  "stop-color": "#0062DF"
+                                }
+                              })
+                            ],
+                            1
+                          ),
+                          _c(
+                            "filter",
+                            {
+                              attrs: {
+                                id: "c",
+                                width: "118.8%",
+                                height: "118.8%",
+                                x: "-9.4%",
+                                y: "-9.4%",
+                                filterUnits: "objectBoundingBox"
+                              }
+                            },
+                            [
+                              _c("feGaussianBlur", {
+                                attrs: {
+                                  in: "SourceAlpha",
+                                  result: "shadowBlurInner1",
+                                  stdDeviation: "1"
+                                }
+                              }),
+                              _c("feOffset", {
+                                attrs: {
+                                  dy: "-1",
+                                  in: "shadowBlurInner1",
+                                  result: "shadowOffsetInner1"
+                                }
+                              }),
+                              _c("feComposite", {
+                                attrs: {
+                                  in: "shadowOffsetInner1",
+                                  in2: "SourceAlpha",
+                                  k2: "-1",
+                                  k3: "1",
+                                  operator: "arithmetic",
+                                  result: "shadowInnerInner1"
+                                }
+                              }),
+                              _c("feColorMatrix", {
+                                attrs: {
+                                  in: "shadowInnerInner1",
+                                  values:
+                                    "0 0 0 0 0 0 0 0 0 0.299356041 0 0 0 0 0.681187726 0 0 0 0.3495684 0"
+                                }
+                              })
+                            ],
+                            1
+                          ),
+                          _c("path", {
+                            attrs: {
+                              id: "b",
+                              d: "M8 0a8 8 0 00-8 8 8 8 0 1016 0 8 8 0 00-8-8z"
+                            }
+                          })
+                        ],
+                        1
+                      ),
+                      _c("g", { attrs: { fill: "none" } }, [
+                        _c("use", {
+                          attrs: { fill: "url(#a)", "xlink:href": "#b" }
+                        }),
+                        _c("use", {
+                          attrs: {
+                            fill: "black",
+                            filter: "url(#c)",
+                            "xlink:href": "#b"
+                          }
+                        }),
+                        _c("path", {
+                          attrs: {
+                            fill: "white",
+                            d:
+                              "M12.162 7.338c.176.123.338.245.338.674 0 .43-.229.604-.474.725a.73.73 0 01.089.546c-.077.344-.392.611-.672.69.121.194.159.385.015.62-.185.295-.346.407-1.058.407H7.5c-.988 0-1.5-.546-1.5-1V7.665c0-1.23 1.467-2.275 1.467-3.13L7.361 3.47c-.005-.065.008-.224.058-.27.08-.079.301-.2.635-.2.218 0 .363.041.534.123.581.277.732.978.732 1.542 0 .271-.414 1.083-.47 1.364 0 0 .867-.192 1.879-.199 1.061-.006 1.749.19 1.749.842 0 .261-.219.523-.316.666zM3.6 7h.8a.6.6 0 01.6.6v3.8a.6.6 0 01-.6.6h-.8a.6.6 0 01-.6-.6V7.6a.6.6 0 01.6-.6z"
+                          }
+                        })
+                      ])
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c("p", { staticClass: "ml-2" }, [
+                    _vm._v(_vm._s(_vm.post.data.attributes.likes.likes_count))
+                  ])
                 ])
-              ]
-            ),
-            _vm._v(" "),
-            _c("p", { staticClass: "ml-2" }, [_vm._v("502")])
+              : _vm._e()
           ]),
           _vm._v(" "),
           _vm._m(1)
@@ -4443,13 +4479,19 @@ var render = function() {
             "button",
             {
               staticClass:
-                "flex justify-center py-1 rounded-lg text-sm text-gray-700 w-full hover:bg-gray-200"
+                "flex justify-center py-1 rounded-lg text-sm text-gray-700 w-full hover:bg-gray-200",
+              on: { click: _vm.clickLikeBtn }
             },
             [
               _c(
                 "svg",
                 {
-                  staticClass: "fill-current w-5 h-5",
+                  class: [
+                    "fill-current",
+                    "w-5",
+                    "h-5",
+                    { "text-blue-500": _vm.isUserLikes }
+                  ],
                   attrs: {
                     xmlns: "http://www.w3.org/2000/svg",
                     viewBox: "0 0 24 24"
@@ -4523,7 +4565,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", [_c("p", [_vm._v("123則留言")])])
+    return _c("div", [_c("p", [_vm._v("0 則留言")])])
   }
 ]
 render._withStripped = true
@@ -21977,6 +22019,16 @@ var actions = {
     })["catch"](function (error) {
       console.log(error);
     });
+  },
+  userClickLikeBtn: function userClickLikeBtn(_ref3, postMeta) {
+    var commit = _ref3.commit,
+        state = _ref3.state;
+    axios.post("/api/posts/".concat(postMeta.postId, "/likes")).then(function (res) {
+      commit('replaceLikesData', {
+        likes: res.data,
+        postKey: postMeta.postKey
+      });
+    })["catch"]();
   }
 };
 var mutations = {
@@ -21994,6 +22046,9 @@ var mutations = {
   },
   setCreateNewPostStatus: function setCreateNewPostStatus(state, status) {
     state.createNewPostStatus = status;
+  },
+  replaceLikesData: function replaceLikesData(state, data) {
+    state.newPosts.data[data.postKey].data.attributes.likes = data.likes;
   }
 };
 /* harmony default export */ __webpack_exports__["default"] = ({

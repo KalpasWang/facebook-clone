@@ -6,7 +6,7 @@
         Loading...
       </div>
       <div v-else-if="newPostsStatus === 'Error'" class="text-lg mt-10 text-center">{{ errorMsg }}</div>
-      <Post v-else v-for="post in newPosts.data" :key="post.data.post_id" :post="post"/>
+      <Post v-else v-for="(post, idx) in newPosts.data" :key="idx" :post="post"/>
     </div>
   </div>
 </template>

@@ -46,6 +46,14 @@ const actions = {
       .catch(error => {
         console.log(error);
       })
+  },
+
+  userClickLikeBtn({commit, state}, postMeta) {
+     axios.post(`/api/posts/${postMeta.postId}/likes`)
+      .then(res => {
+        commit('replaceLikesData', { likes: res.data, postKey: postMeta.postKey })
+      })
+      .catch();
   }
 };
 
@@ -68,6 +76,10 @@ const mutations = {
 
   setCreateNewPostStatus(state, status) {
     state.createNewPostStatus = status;
+  },
+
+  replaceLikesData(state, data) {
+    state.newPosts.data[data.postKey].data.attributes.likes = data.likes;
   }
 };
 
