@@ -17,6 +17,7 @@ class LikeCollection extends ResourceCollection
     return [
       'data' => $this->collection,
       'likes_count' => $this->count(),
+      'user_likes_post' => $this->collection->contains('user_id', auth()->user()->id),
       'links' => [
         'self' => url('/posts')
       ]

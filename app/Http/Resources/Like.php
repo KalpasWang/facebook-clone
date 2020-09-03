@@ -14,16 +14,17 @@ class Like extends JsonResource
      */
     public function toArray($request)
     {
-        return [
-          'data' => [
-            'type' => 'likes',
-            'likes_id' => $this->id,
-            'user_id' => (int)$this->pivot->user_id,
-            'attributes' => [],
-          ],
-          'links' => [
-            'self' => url('/posts/'.$this->pivot->post_id)
-          ]
-        ];
+      return [
+        'data' => [
+          'type' => 'likes',
+          'like_id' => $this->id,
+          'user_id' => (int)$this->pivot->user_id,
+          'post_id' => (int)$this->pivot->post_id,
+          'attributes' => [],
+        ],
+        'links' => [
+          'self' => url('/posts/'.$this->pivot->post_id)
+        ]
+      ];
     }
 }
