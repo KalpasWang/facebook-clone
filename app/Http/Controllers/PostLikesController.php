@@ -16,7 +16,6 @@ class PostLikesController extends Controller
     if($model)
     {
       $model->delete();
-      $model->save();
     }
     else
     {
@@ -24,7 +23,6 @@ class PostLikesController extends Controller
         'user_id' => auth()->user()->id,
         'post_id' => $post->id
       ]);
-      echo ' like ID '.$like->id;
     }
 
     return new LikeCollection($post->likes);

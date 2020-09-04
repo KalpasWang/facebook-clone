@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Scopes\ReverseScope;
 use App\User;
 use App\Comment;
+use App\Like;
 
 class Post extends Model
 {
@@ -28,7 +29,8 @@ class Post extends Model
 
   public function likes()
   {
-    return $this->belongsToMany(User::class, 'likes', 'post_id', 'user_id');
+    // return $this->belongsToMany(User::class, 'likes', 'post_id', 'user_id');
+    return $this->hasMany(Like::class);
   }
 
   public function comments()

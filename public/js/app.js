@@ -2309,20 +2309,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Post",
   data: function data() {
-    return {};
+    return {
+      toggleUserLikes: this.isUserLikes
+    };
   },
   props: ['post'],
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['authUser']), {
     isUserLikes: function isUserLikes() {
-      var _this = this;
-
-      return this.post.data.attributes.likes.data.some(function (item) {
-        return item.data.user_id === _this.authUser.data.user_id;
-      });
+      return this.post.data.attributes.likes.data.user_likes_post;
     }
   }),
   methods: {
     clickLikeBtn: function clickLikeBtn() {
+      this.toggleUserLikes = !this.toggleUserLikes;
       this.$store.dispatch('userClickLikeBtn', {
         postId: this.post.data.post_id,
         postKey: this.$vnode.key
@@ -4484,7 +4483,7 @@ var render = function() {
               on: { click: _vm.clickLikeBtn }
             },
             [
-              _vm.isUserLikes
+              _vm.toggleUserLikes
                 ? _c("i", {
                     staticClass:
                       "fas fa-thumbs-up text-blue-500 w-5 h-5 text-xl"
@@ -4510,7 +4509,7 @@ var render = function() {
               _vm._v(" "),
               _c(
                 "p",
-                { class: ["ml-2", { "text-bkue-500": _vm.isUserLikes }] },
+                { class: ["ml-2", { "text-bkue-500": _vm.toggleUserLikes }] },
                 [_vm._v("讚")]
               )
             ]
