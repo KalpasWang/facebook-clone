@@ -18,7 +18,7 @@ class Comment extends JsonResource
     return [
       'data' => [
         'type' => 'comments',
-        'comments_id' => $this->id,
+        'comment_id' => $this->id,
         'attributes' => [
           'commented_by' => new UserResource($this->user),
           'body' => $this->body,

@@ -34,7 +34,7 @@ class PostCommentsTest extends TestCase
           [        
             'data' => [
               'type' => 'comments',
-              'comments_id' => 1,
+              'comment_id' => 1,
               'attributes' => [
                 'commented_by' => [
                   'data' => [
@@ -56,6 +56,71 @@ class PostCommentsTest extends TestCase
         'comments_count' => 1,
         'links' => [
           'self' => url('/posts'),
+        ]
+      ]);
+  }
+
+  public function testBodyIsRequiredToLeaveAComment()
+  {
+    $this->actingAs($user = factory(User::class)->create(), 'api');
+    $post = factory(Post::class)->create(['id' => 123]);
+
+    $response = $this->post('/api/posts/'.$post->id.'/comments', [
+      'body' => ''
+    ])->assertStatus(422);
+
+    $responseString = json_decode($response->getContent(), true);
+    $this->assertArrayHasKey('body', $responseString['errors']['meta']);
+  }
+
+  public function testPostsAreReturnedWithComments()
+  {
+    $this->actingAs($user = factory(User::class)->create(), 'api');
+    $post = factory(Post::class)->create(['id' => 123, 'user_id' => $user->id]);
+
+    $this->post('/api/posts/'.$post->id.'/comments', [
+      'body' => 'cool comment!'
+    ])->assertStatus(200);
+
+    $comment = Comment::first();
+    $response = $this->get('api/posts')
+      ->assertStatus(200)
+      ->assertJson([
+        'data' => [
+          [
+            'data' => [
+              'type' => 'posts',
+              'post_id' => $post->id,
+              'attributes' => [
+                'comments' => [
+                  'data' => [
+                    [
+                      'data' => [
+                        'type' => 'comments',
+                        'comment_id' => 1,
+                        'attributes' => [
+                          'commented_by' => [
+                            'data' => [
+                              'user_id' => $user->id,
+                              'attributes' => [
+                                'name' => $user->name
+                              ]
+                            ]
+                          ],
+                          'body' => $comment->body,
+                          'commented_at' => $comment->created_at->diffForHumans(),
+                        ]
+                      ]
+                    ]
+                  ],
+                  'comments_count' => 1,
+                ]
+              ]
+            ]
+          ],
+        ],
+        'links' => [
+          'self' => url('/posts')
         ]
       ]);
   }
