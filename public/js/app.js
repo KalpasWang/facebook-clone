@@ -2305,18 +2305,42 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Post",
   data: function data() {
     return {
-      toggleUserLikes: this.isUserLikes
+      toggleUserLikes: false,
+      showComments: false
     };
   },
   props: ['post'],
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['authUser']), {
     isUserLikes: function isUserLikes() {
-      return this.post.data.attributes.likes.data.user_likes_post;
+      return this.post.data.attributes.likes.user_likes_post;
+    },
+    commentsData: function commentsData() {
+      return this.post.data.attributes.comments.data;
     }
   }),
   methods: {
@@ -2326,7 +2350,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         postId: this.post.data.post_id,
         postKey: this.$vnode.key
       });
+    },
+    handleNewCommentInput: function handleNewCommentInput(e) {
+      e.preventDefault();
+
+      if (e.keyCode === 13) {
+        console.log('enter');
+      }
     }
+  },
+  mounted: function mounted() {
+    this.toggleUserLikes = this.isUserLikes;
   }
 });
 
@@ -4112,7 +4146,7 @@ var render = function() {
             "div",
             {
               staticClass:
-                "rounded-full px-2 leading-8 w-full h-8 cursor-pointer bg-gray-200 hover:bg-gray-300 text-sm text-left",
+                "rounded-full px-2 leading-8 w-full h-8 cursor-pointer text-gray-600 bg-gray-200 hover:bg-gray-300 text-sm text-left",
               on: { click: _vm.openModal }
             },
             [
@@ -4464,15 +4498,33 @@ var render = function() {
               : _vm._e()
           ]),
           _vm._v(" "),
-          _vm._m(1)
+          _c("div", [
+            _c(
+              "p",
+              {
+                staticClass: "cursor-pointer hover:underline",
+                on: {
+                  click: function($event) {
+                    _vm.showComments = !_vm.showComments
+                  }
+                }
+              },
+              [
+                _vm._v(
+                  "\n          " +
+                    _vm._s(_vm.post.data.attributes.comments.comments_count) +
+                    " 則留言\n        "
+                )
+              ]
+            )
+          ])
         ]
       ),
       _vm._v(" "),
       _c(
         "div",
         {
-          staticClass: "flex justify-between pt-1 m-2",
-          staticStyle: { "border-top": "1px solid #ccc" }
+          staticClass: "flex justify-between pt-1 m-2 border-t border-gray-400"
         },
         [
           _c(
@@ -4509,7 +4561,7 @@ var render = function() {
               _vm._v(" "),
               _c(
                 "p",
-                { class: ["ml-2", { "text-bkue-500": _vm.toggleUserLikes }] },
+                { class: ["ml-2", { "text-blue-500": _vm.toggleUserLikes }] },
                 [_vm._v("讚")]
               )
             ]
@@ -4545,7 +4597,64 @@ var render = function() {
             ]
           )
         ]
-      )
+      ),
+      _vm._v(" "),
+      _vm.showComments
+        ? _c(
+            "div",
+            { staticClass: "border-t border-gray-400 my-1 mx-2" },
+            [
+              _c("div", { staticClass: "my-2 flex items-start" }, [
+                _vm._m(1),
+                _vm._v(" "),
+                _c("input", {
+                  staticClass:
+                    "text-sm bg-gray-200 rounded-full p-2 w-full focus:outline-none",
+                  attrs: { type: "text", placeholder: "留言…" },
+                  on: { keypress: _vm.handleNewCommentInput }
+                })
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.commentsData, function(comment) {
+                return _c(
+                  "div",
+                  {
+                    key: comment.comment_id,
+                    staticClass: "flex my-2 items-start"
+                  },
+                  [
+                    _vm._m(2, true),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticClass:
+                          "w-full flex-initial rounded-lg bg-gray-200 p-2"
+                      },
+                      [
+                        _c("p", { staticClass: "text-sm font-bold" }, [
+                          _vm._v(
+                            _vm._s(
+                              comment.data.attributes.commented_by.data
+                                .attributes.name
+                            )
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "p",
+                          { staticClass: "text-sm whitespace-pre-line" },
+                          [_vm._v(_vm._s(comment.data.attributes.body))]
+                        )
+                      ]
+                    )
+                  ]
+                )
+              })
+            ],
+            2
+          )
+        : _vm._e()
     ]
   )
 }
@@ -4569,7 +4678,31 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", [_c("p", [_vm._v("0 則留言")])])
+    return _c("div", { staticClass: "w-8 mr-2" }, [
+      _c("img", {
+        staticClass: "w-8 h-8 object-cover rounded-full align-middle",
+        attrs: {
+          src:
+            "https://cdn.pixabay.com/photo/2014/07/09/10/04/man-388104_960_720.jpg",
+          alt: "user image"
+        }
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "w-8 mr-2" }, [
+      _c("img", {
+        staticClass: "w-8 h-8 object-cover rounded-full align-middle",
+        attrs: {
+          src:
+            "https://cdn.pixabay.com/photo/2014/07/09/10/04/man-388104_960_720.jpg",
+          alt: "user image"
+        }
+      })
+    ])
   }
 ]
 render._withStripped = true
