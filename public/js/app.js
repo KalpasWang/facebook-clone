@@ -2325,13 +2325,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Post",
   data: function data() {
     return {
       toggleUserLikes: false,
-      showComments: false
+      isShowComments: false
     };
   },
   props: ['post'],
@@ -2351,16 +2353,38 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         postKey: this.$vnode.key
       });
     },
-    handleNewCommentInput: function handleNewCommentInput(e) {
-      e.preventDefault();
+    showComments: function showComments() {
+      this.isShowComments = !this.isShowComments;
+    },
+    handleNewComment: function handleNewComment(e) {
+      var rows = +e.target.rows,
+          value = e.target.value;
+      console.log(e);
 
-      if (e.keyCode === 13) {
-        console.log('enter');
+      if (e.keyCode === 13 && e.shiftKey) {
+        e.preventDefault();
+        e.target.value += '\n';
+        e.target.rows = rows + 1;
+      } else if (e.keyCode === 13) {
+        e.preventDefault();
+        this.$store.dispatch('addCommentToPost', {
+          body: value,
+          postId: this.post.data.post_id,
+          postKey: this.$vnode.key
+        });
+        e.target.value = '';
+      } else if (e.keyCode === 8) {
+        if (rows > 1 && value[value.length - 1] === '\n') {
+          e.target.rows = rows - 1;
+        }
       }
     }
   },
   mounted: function mounted() {
     this.toggleUserLikes = this.isUserLikes;
+  },
+  updated: function updated() {
+    if (this.isShowComments) this.$refs.newComment.focus();
   }
 });
 
@@ -4499,24 +4523,24 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", [
-            _c(
-              "p",
-              {
-                staticClass: "cursor-pointer hover:underline",
-                on: {
-                  click: function($event) {
-                    _vm.showComments = !_vm.showComments
-                  }
-                }
-              },
-              [
-                _vm._v(
-                  "\n          " +
-                    _vm._s(_vm.post.data.attributes.comments.comments_count) +
-                    " 則留言\n        "
+            _vm.post.data.attributes.comments.comments_count > 0
+              ? _c(
+                  "p",
+                  {
+                    staticClass: "cursor-pointer hover:underline",
+                    on: { click: _vm.showComments }
+                  },
+                  [
+                    _vm._v(
+                      "\n          " +
+                        _vm._s(
+                          _vm.post.data.attributes.comments.comments_count
+                        ) +
+                        " 則留言\n        "
+                    )
+                  ]
                 )
-              ]
-            )
+              : _vm._e()
           ])
         ]
       ),
@@ -4571,7 +4595,8 @@ var render = function() {
             "button",
             {
               staticClass:
-                "flex justify-center py-1 rounded-lg text-sm text-gray-700 w-full hover:bg-gray-200 focus:outline-none"
+                "flex justify-center py-1 rounded-lg text-sm text-gray-700 w-full hover:bg-gray-200 focus:outline-none",
+              on: { click: _vm.showComments }
             },
             [
               _c(
@@ -4599,7 +4624,7 @@ var render = function() {
         ]
       ),
       _vm._v(" "),
-      _vm.showComments
+      _vm.isShowComments
         ? _c(
             "div",
             { staticClass: "border-t border-gray-400 my-1 mx-2" },
@@ -4607,11 +4632,12 @@ var render = function() {
               _c("div", { staticClass: "my-2 flex items-start" }, [
                 _vm._m(1),
                 _vm._v(" "),
-                _c("input", {
+                _c("textarea", {
+                  ref: "newComment",
                   staticClass:
-                    "text-sm bg-gray-200 rounded-full p-2 w-full focus:outline-none",
-                  attrs: { type: "text", placeholder: "留言…" },
-                  on: { keypress: _vm.handleNewCommentInput }
+                    "resize-none text-sm bg-gray-200 rounded-lg px-4 py-2 w-full focus:outline-none",
+                  attrs: { rows: "1", placeholder: "留言…" },
+                  on: { keydown: _vm.handleNewComment }
                 })
               ]),
               _vm._v(" "),
@@ -22166,6 +22192,18 @@ var actions = {
         postKey: postMeta.postKey
       });
     })["catch"]();
+  },
+  addCommentToPost: function addCommentToPost(_ref4, postMeta) {
+    var commit = _ref4.commit,
+        state = _ref4.state;
+    axios.post("/api/posts/".concat(postMeta.postId, "/comments"), {
+      body: postMeta.body
+    }).then(function (res) {
+      commit('pushComments', {
+        comments: res.data,
+        postKey: postMeta.postKey
+      });
+    })["catch"]();
   }
 };
 var mutations = {
@@ -22186,6 +22224,9 @@ var mutations = {
   },
   replaceLikesData: function replaceLikesData(state, data) {
     state.newPosts.data[data.postKey].data.attributes.likes = data.likes;
+  },
+  pushComments: function pushComments(state, data) {
+    state.newPosts.data[data.postKey].data.attributes.comments = data.comments;
   }
 };
 /* harmony default export */ __webpack_exports__["default"] = ({

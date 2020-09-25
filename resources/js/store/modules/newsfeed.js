@@ -54,7 +54,15 @@ const actions = {
         commit('replaceLikesData', { likes: res.data, postKey: postMeta.postKey })
       })
       .catch();
-  }
+  },
+
+  addCommentToPost({commit, state}, postMeta) {
+    axios.post(`/api/posts/${postMeta.postId}/comments`, { body: postMeta.body })
+     .then(res => {
+       commit('pushComments', { comments: res.data, postKey: postMeta.postKey })
+     })
+     .catch();
+ },
 };
 
 const mutations = {
@@ -80,7 +88,11 @@ const mutations = {
 
   replaceLikesData(state, data) {
     state.newPosts.data[data.postKey].data.attributes.likes = data.likes;
-  }
+  },
+
+  pushComments(state, data) {
+    state.newPosts.data[data.postKey].data.attributes.comments = data.comments;
+  },
 };
 
 export default {

@@ -27,7 +27,9 @@
         </div>
       </div>
       <div>
-          <p class="cursor-pointer hover:underline" @click="showComments = !showComments">
+          <p v-if="post.data.attributes.comments.comments_count > 0" 
+             class="cursor-pointer hover:underline" @click="showComments"
+           >
             {{ post.data.attributes.comments.comments_count }} 則留言
           </p>
       </div>
@@ -39,18 +41,18 @@
         <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="fill-current w-5 h-5"><path d="M20.8 15.6c.4-.5.6-1.1.6-1.7 0-.6-.3-1.1-.5-1.4.3-.7.4-1.7-.5-2.6-.7-.6-1.8-.9-3.4-.8-1.1.1-2 .3-2.1.3-.2 0-.4.1-.7.1 0-.3 0-.9.5-2.4.6-1.8.6-3.1-.1-4.1-.7-1-1.8-1-2.1-1-.3 0-.6.1-.8.4-.5.5-.4 1.5-.4 2-.4 1.5-2 5.1-3.3 6.1l-.1.1c-.4.4-.6.8-.8 1.2-.2-.1-.5-.2-.8-.2H3.7c-1 0-1.7.8-1.7 1.7v6.8c0 1 .8 1.7 1.7 1.7h2.5c.4 0 .7-.1 1-.3l1 .1c.2 0 2.8.4 5.6.3.5 0 1 .1 1.4.1.7 0 1.4-.1 1.9-.2 1.3-.3 2.2-.8 2.6-1.6.3-.6.3-1.2.3-1.6.8-.8 1-1.6.9-2.2.1-.3 0-.6-.1-.8zM3.7 20.7c-.3 0-.6-.3-.6-.6v-6.8c0-.3.3-.6.6-.6h2.5c.3 0 .6.3.6.6v6.8c0 .3-.3.6-.6.6H3.7zm16.1-5.6c-.2.2-.2.5-.1.7 0 0 .2.3.2.7 0 .5-.2 1-.8 1.4-.2.2-.3.4-.2.6 0 0 .2.6-.1 1.1-.3.5-.9.9-1.8 1.1-.8.2-1.8.2-3 .1h-.1c-2.7.1-5.4-.3-5.4-.3H8v-7.2c0-.2 0-.4-.1-.5.1-.3.3-.9.8-1.4 1.9-1.5 3.7-6.5 3.8-6.7v-.3c-.1-.5 0-1 .1-1.2.2 0 .8.1 1.2.6.4.6.4 1.6-.1 3-.7 2.1-.7 3.2-.2 3.7.3.2.6.3.9.2.3-.1.5-.1.7-.1h.1c1.3-.3 3.6-.5 4.4.3.7.6.2 1.4.1 1.5-.2.2-.1.5.1.7 0 0 .4.4.5 1 0 .3-.2.6-.5 1z"/></svg>
         <p :class="['ml-2', { 'text-blue-500': toggleUserLikes }]">讚</p>
       </button>
-      <button class="flex justify-center py-1 rounded-lg text-sm text-gray-700 w-full hover:bg-gray-200 focus:outline-none">
+      <button class="flex justify-center py-1 rounded-lg text-sm text-gray-700 w-full hover:bg-gray-200 focus:outline-none" @click="showComments">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="fill-current w-5 h-5"><path d="M20.3 2H3.7C2 2 .6 3.4.6 5.2v10.1c0 1.7 1.4 3.1 3.1 3.1V23l6.6-4.6h9.9c1.7 0 3.1-1.4 3.1-3.1V5.2c.1-1.8-1.3-3.2-3-3.2zm1.8 13.3c0 1-.8 1.8-1.8 1.8H9.9L5 20.4V17H3.7c-1 0-1.8-.8-1.8-1.8v-10c0-1 .8-1.8 1.8-1.8h16.5c1 0 1.8.8 1.8 1.8v10.1zM6.7 6.7h10.6V8H6.7V6.7zm0 2.9h10.6v1.3H6.7V9.6zm0 2.8h10.6v1.3H6.7v-1.3z"/></svg>
         <p class="ml-2">留言</p>
       </button>
     </div>
 
-    <div v-if="showComments" class="border-t border-gray-400 my-1 mx-2">
+    <div v-if="isShowComments" class="border-t border-gray-400 my-1 mx-2">
       <div class="my-2 flex items-start">
         <div class="w-8 mr-2">
           <img src="https://cdn.pixabay.com/photo/2014/07/09/10/04/man-388104_960_720.jpg" alt="user image" class="w-8 h-8 object-cover rounded-full align-middle">
         </div>
-        <input type="text" class="text-sm bg-gray-200 rounded-full p-2 w-full focus:outline-none" placeholder="留言…" @keypress="handleNewCommentInput">
+        <textarea ref="newComment" rows="1" class="resize-none text-sm bg-gray-200 rounded-lg px-4 py-2 w-full focus:outline-none" placeholder="留言…" @keydown="handleNewComment"></textarea>
       </div>
       <div class="flex my-2 items-start" v-for="comment in commentsData" :key="comment.comment_id">
         <div class="w-8 mr-2">
@@ -73,7 +75,7 @@ export default {
   data() {
     return {
       toggleUserLikes: false,
-      showComments: false,
+      isShowComments: false,
     }
   },
   props: ['post'],
@@ -91,15 +93,38 @@ export default {
       this.toggleUserLikes = !this.toggleUserLikes;
       this.$store.dispatch('userClickLikeBtn', { postId: this.post.data.post_id, postKey: this.$vnode.key });
     },
-    handleNewCommentInput(e) {
-      e.preventDefault()
-      if(e.keyCode === 13) {
-        console.log('enter');
+    showComments() {
+      this.isShowComments = !this.isShowComments;
+    },
+    handleNewComment(e) {
+      let rows  = +e.target.rows,
+          value = e.target.value;
+      console.log(e)
+      if(e.keyCode === 13 && e.shiftKey) {
+        e.preventDefault();
+        e.target.value += '\n';
+        e.target.rows = rows + 1;
+      } else if(e.keyCode === 13) {
+        e.preventDefault()
+        this.$store.dispatch('addCommentToPost', { 
+          body: value, 
+          postId: this.post.data.post_id, 
+          postKey: this.$vnode.key 
+        }); 
+        e.target.value = '';
+      } else if(e.keyCode === 8) {
+        if(rows > 1 && value[value.length - 1] === '\n') {
+           e.target.rows = rows - 1;
+        }
       }
     }
   },
   mounted() {
     this.toggleUserLikes = this.isUserLikes;
+  },
+  updated() {
+    if(this.isShowComments)
+      this.$refs.newComment.focus();
   }
 }
 </script>
